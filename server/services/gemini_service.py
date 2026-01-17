@@ -93,9 +93,28 @@ High quality, detailed, architectural photography, 8k resolution."""
         try:
             print(f"Generating with model: {target_model}")
             
+            # Read System Prompt
+            import pathlib
+            try:
+                current_file = pathlib.Path(__file__)
+                server_root = current_file.parent.parent
+                system_prompt_path = server_root / "data" / "system_prompt.txt"
+                
+                with open(system_prompt_path, "r", encoding="utf-8") as f:
+                    system_instruction = f.read()
+                    print(f"Loaded system prompt from server/data ({len(system_instruction)} chars)")
+            except Exception as e:
+                print(f"Error reading system prompt: {e}")
+                system_instruction = None
+
+            config = None
+            if system_instruction:
+                config = types.GenerateContentConfig(system_instruction=system_instruction)
+
             response = client.models.generate_content(
                 model=target_model,
                 contents=prompt,
+                config=config
             )
             
             # Parse Response
@@ -124,14 +143,7 @@ High quality, detailed, architectural photography, 8k resolution."""
     print("Generation failed. Using Placeholder.")
     time.sleep(2) 
     return {
-        "success": False, # Changed to False to indicate failure in logs, but previously was True?
-        # Actually client handles errors? generate_routes line 60: if response_data.get("success")
-        # So I should return success=False if it actually failed, so the route can send a placeholder?
-        # Route logic: if success: url=data else: url=placeholder.
-        # So here if I return success=True with a placeholder, the route uses it.
-        # If I return success=False, the route uses ITS OWN placeholder.
-        # Let's keep it consistent: failed generation -> success=False.
-        
+        "success": False,
         "error": "Generation API failed or returned no image.",
         "prompt": prompt
     }

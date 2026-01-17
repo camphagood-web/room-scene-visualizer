@@ -23,10 +23,7 @@ class GenerationResponse(BaseModel):
     results: List[dict] = []
 
 @router.post("/generate")
-async def generate_images(request: GenerateRequest):
-    # In a real app, we would enqueue a job. 
-    # For this synchronous/simple version, we will iterate and generate.
-    
+async def generate_images(request: GenerateRequest):    
     results = []
     generated_images = []
     

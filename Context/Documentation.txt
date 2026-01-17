@@ -1,0 +1,4 @@
+https://ai.google.dev/gemini-api/docs/image-generation
+
+
+Want to use both Nano Banana and Nano Banana Pro. Want the option to switch between the two different models to vary between image output quality

@@ -1,0 +1,11 @@
+Generate a [room type] room scene using the details of the [Input] design style
+
+Use the following design parameters:
+
+Architect Name: [Input]
+
+Designer Name: [Input]
+
+Color Wheel [ Light | Medium | Dark ]
+
+Create the image in aspect ratio [1:1, 4:3, 16:9]

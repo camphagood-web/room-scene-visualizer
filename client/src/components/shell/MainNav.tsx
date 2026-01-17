@@ -1,5 +1,6 @@
 import { Link, useLocation } from 'react-router-dom';
 import { Home, Image, Settings } from 'lucide-react';
+import { ThemeToggle } from '../theme/ThemeToggle';
 
 export function MainNav() {
     const location = useLocation();
@@ -9,7 +10,7 @@ export function MainNav() {
     };
 
     return (
-        <nav className="flex items-center space-x-2 px-4 py-2 bg-white border-b border-stone-200">
+        <nav className="flex items-center px-4 py-2 bg-white dark:bg-stone-900 border-b border-stone-200 dark:border-stone-800 transition-colors duration-300">
             <Link to="/" className="flex items-center space-x-2 font-heading font-bold text-xl text-primary mr-8">
                 <Home className="w-6 h-6" />
                 <span>Room Viz</span>
@@ -24,6 +25,10 @@ export function MainNav() {
                 <Image className="w-5 h-5" />
                 <span>Gallery</span>
             </Link>
+
+            <div className="ml-auto">
+                <ThemeToggle />
+            </div>
         </nav>
     );
 }

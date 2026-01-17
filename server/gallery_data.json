@@ -1,0 +1,39 @@
+{
+  "sessions": [
+    {
+      "id": "57d863f9-6d1a-4a00-bf12-704869116532",
+      "createdAt": "2026-01-17T20:50:37.146414Z",
+      "designStyle": {
+        "id": "minimalist",
+        "name": "Minimalist"
+      },
+      "architect": {
+        "id": "frank-lloyd-wright",
+        "name": "Frank Lloyd Wright"
+      },
+      "designer": {
+        "id": "kelly-wearstler",
+        "name": "Kelly Wearstler"
+      },
+      "colorWheel": "Light",
+      "aspectRatio": "16:9",
+      "imageQuality": "standard",
+      "images": [
+        {
+          "id": "b38caec8-367a-47a3-9036-4e30c674347e",
+          "roomType": {
+            "id": "living-room",
+            "name": "Living Room"
+          },
+          "url": {
+            "success": true,
+            "data": "https://placehold.co/1024x1024?text=Generated+Image+Placeholder",
+            "prompt_used": "Generate a Living Room room scene using the details of the Minimalist design style\n\nUse the following design parameters:\n\nArchitect Name: Frank Lloyd Wright\n\nDesigner Name: Kelly Wearstler\n\nColor Wheel Light\n\nCreate the image in aspect ratio 16:9",
+            "model_used": "gemini-1.5-flash"
+          },
+          "selected": false
+        }
+      ]
+    }
+  ]
+}

@@ -1,13 +1,16 @@
+import { Gallery as GalleryFeature } from '../features/gallery/components/Gallery'
+import { useGallery } from '../features/gallery/hooks/useGallery'
+
 export default function Gallery() {
-    return (
-        <div className="space-y-6">
-            <h1 className="text-3xl font-heading font-bold text-stone-800">Gallery</h1>
-            <p className="text-stone-600">
-                Your generated room scenes will appear here.
-            </p>
-            <div className="p-12 border-2 border-dashed border-stone-300 rounded-lg text-center text-stone-400">
-                No images generated yet.
+    const gallery = useGallery()
+
+    if (gallery.isLoading) {
+        return (
+            <div className="flex items-center justify-center min-h-[50vh]">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-amber-500"></div>
             </div>
-        </div>
-    );
+        )
+    }
+
+    return <GalleryFeature {...gallery} />
 }

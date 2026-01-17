@@ -11,41 +11,44 @@ def to_kebab(s):
         return ""
     return re.sub(r'[^a-z0-9]+', '-', s.lower()).strip('-')
 
+# Global cache to hold the processed data AND the raw lookups
+_DATA_CACHE = None
+
 def load_data():
     try:
-        # Load Room Creator Data
+        # Load Raw Data
         room_df = pd.read_csv(ROOM_CREATOR_PATH)
         color_df = pd.read_csv(COLOR_PALETTES_PATH)
         
         styles = []
-        architects_map = {} # id -> {id, name, styleIds: set()}
-        designers_map = {}  # id -> {id, name, styleIds: set()}
+        architects_map = {} 
+        designers_map = {} 
 
         # 1. Process Styles
         for _, row in room_df.iterrows():
             style_name = row['Design Style']
             style_id = to_kebab(style_name)
             
-            # Extract attributes from room_df
-            # Note: The CSV column names need to differ based on strict CSV reading or flexible?
-            # Using the names seen in previous view_file of loader
-            # 'Representative Architects', 'Representative Interior Designers'
+            # Find metadata from color_df (first match)
+            # We do this to get Mood/Undertone/Note for the frontend display
+            mood = ""
+            undertone = ""
+            note = ""
             
+            # Filter color_df for this style
+            style_colors = color_df[color_df['Design Style'] == style_name]
+            if not style_colors.empty:
+                first_row = style_colors.iloc[0]
+                mood = first_row.get('Mood', '')
+                undertone = first_row.get('Undertone', '')
+                note = first_row.get('Designer Note', '')
+
             styles.append({
                 "id": style_id,
                 "name": style_name,
-                "mood": row.get('Mood', ''), # Assuming Mood is in room_creator or need to join?
-                # Actually, Mood and Undertone and DesignerNote seen in Sample Data seem to match 
-                # what was in the previous loader (from color_palettes or room_creator?)
-                # Previous loader read 'Primary Regions' etc from room_df.
-                # Sample data has 'mood', 'undertone', 'designerNote'.
-                # Let's check color_df for these fields as the previous loader seemed to pull from both?
-                # Actually previous loader pulled Regions/Elements from room_df.
-                # And Mood/Undertone/Note from color_df *per color row*.
-                # But DesignStyle object has ONE mood/undertone/note.
-                # Let's try to grab unique meta from color_df if possible, or just use what we have.
-                "undertone": "", 
-                "designerNote": ""
+                "mood": mood,
+                "undertone": undertone,
+                "designerNote": note
             })
             
             # Process Architects
@@ -78,22 +81,6 @@ def load_data():
                     }
                 designers_map[des_id]["styleIds"].add(style_id)
 
-        # 2. Enrich Styles from Color Palette Data (Mood, Undertone, Note)
-        # We'll take the first occurrence for each style
-        for _, row in color_df.iterrows():
-            style_name = row['Design Style']
-            style_id = to_kebab(style_name)
-            
-            # Find the style in our list
-            for style in styles:
-                if style["id"] == style_id:
-                    # Update if empty
-                    if not style.get("mood"): style["mood"] = row.get("Mood", "")
-                    if not style.get("undertone"): style["undertone"] = row.get("Undertone", "")
-                    # Note usually comes from 'Designer Note' column
-                    if not style.get("designerNote"): style["designerNote"] = row.get("Designer Note", "")
-                    break
-
         # Convert sets to lists
         architects = [
             {**a, "styleIds": list(a["styleIds"])} 
@@ -110,7 +97,7 @@ def load_data():
             { "id": "dining-room", "name": "Dining Room" },
             { "id": "kitchen", "name": "Kitchen" },
             { "id": "bathroom", "name": "Bathroom" },
-            { "id": "bedroom", "name": "Bedroom" } # Added common one
+            { "id": "bedroom", "name": "Bedroom" } 
         ]
         
         color_wheel_options = [
@@ -130,28 +117,112 @@ def load_data():
             { "id": "high", "name": "High", "description": "Enhanced detail" }
         ]
 
+        # Store in cache structure
         return {
-            "styles": styles,
-            "architects": architects,
-            "designers": designers,
-            "roomTypes": room_types,
-            "colorWheelOptions": color_wheel_options,
-            "aspectRatios": aspect_ratios,
-            "imageQualityOptions": image_quality_options
+            "frontend_data": {
+                "styles": styles,
+                "architects": architects,
+                "designers": designers,
+                "roomTypes": room_types,
+                "colorWheelOptions": color_wheel_options,
+                "aspectRatios": aspect_ratios,
+                "imageQualityOptions": image_quality_options
+            },
+            "raw_data": {
+                "room_df": room_df,
+                "color_df": color_df
+            }
         }
 
     except Exception as e:
         print(f"Error loading data: {e}")
-        return {
-            "styles": [], "architects": [], "designers": [],
-            "roomTypes": [], "colorWheelOptions": [], "aspectRatios": [], "imageQualityOptions": []
-        }
-
-# Singleton-ish access
-_DATA_CACHE = None
+        return None
 
 def get_data():
     global _DATA_CACHE
     if _DATA_CACHE is None:
         _DATA_CACHE = load_data()
-    return _DATA_CACHE
+    return _DATA_CACHE["frontend_data"] if _DATA_CACHE else {
+        "styles": [], "architects": [], "designers": [],
+        "roomTypes": [], "colorWheelOptions": [], "aspectRatios": [], "imageQualityOptions": []
+    }
+
+ROOM_COLUMN_MAP = {
+    "living-room": "Living Room (2M+)",
+    "dining-room": "Dining Room (2M+)",
+    "kitchen": "Kitchen (2M+)",
+    "bathroom": "Bathroom (2M+)"
+}
+
+def get_room_details(style_id: str, room_type_id: str):
+    global _DATA_CACHE
+    if _DATA_CACHE is None: _DATA_CACHE = load_data()
+    if not _DATA_CACHE: return {}
+
+    room_df = _DATA_CACHE["raw_data"]["room_df"]
+    
+    # helper to match style
+    # Assuming style_id is kebab case of 'Design Style' column
+    # We iterate to find match
+    row = None
+    for _, r in room_df.iterrows():
+        if to_kebab(r['Design Style']) == style_id:
+            row = r
+            break
+            
+    if row is None:
+        return {}
+        
+    details = {
+        "architectural_elements": row.get("Architectural elements for rooms", ""),
+        "room_specifics": ""
+    }
+    
+    col_name = ROOM_COLUMN_MAP.get(room_type_id)
+    if col_name and col_name in row:
+        details["room_specifics"] = row[col_name]
+        
+    return details
+
+def get_color_details(style_id: str, intensity_id: str):
+    """
+    intensity_id: 'light', 'medium', 'dark'
+    Returns a string dict or formatted string of colors
+    """
+    global _DATA_CACHE
+    if _DATA_CACHE is None: _DATA_CACHE = load_data()
+    if not _DATA_CACHE: return ""
+
+    color_df = _DATA_CACHE["raw_data"]["color_df"]
+    
+    # Filter by style
+    # We need to find rows where to_kebab(Design Style) == style_id
+    # We can't just use vector operations easily with custom function, loop is fine for small data
+    matching_rows = []
+    for _, r in color_df.iterrows():
+        if to_kebab(r['Design Style']) == style_id:
+            matching_rows.append(r)
+            
+    if not matching_rows:
+        return ""
+        
+    # Map intensity_id to CSV Column
+    # id='light' -> Col='Light'
+    col_name = intensity_id.title() # Light, Medium, Dark
+    
+    if col_name not in matching_rows[0]:
+        return ""
+        
+    # Construct palette string
+    # Expected categories: Dominant, Grounding, Accent
+    palette_parts = []
+    
+    for r in matching_rows:
+        category = r.get("Category", "")
+        # clear " (60%)" etc from category if desired, or keep it
+        # The prompt might benefit from "Dominant (60%): color"
+        val = r.get(col_name, "")
+        if val and isinstance(val, str):
+            palette_parts.append(f"{category}: {val}")
+            
+    return "; ".join(palette_parts)

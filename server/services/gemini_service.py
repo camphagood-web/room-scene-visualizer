@@ -1,97 +1,137 @@
-import google.generativeai as genai
+from google import genai
+from google.genai import types
 from config import GOOGLE_API_KEY
 import os
+from services.data_loader import get_data, get_room_details, get_color_details
+import time
 
-# Configure Gemini
+# Configure Gemini Client (v1beta/v0.8+ SDK)
 if GOOGLE_API_KEY:
-    genai.configure(api_key=GOOGLE_API_KEY)
+    client = genai.Client(api_key=GOOGLE_API_KEY)
 else:
     print("Gemini API Key missing")
+    client = None
 
 # Model Mapping
-# "Nano Banana" -> Falsh (Fast)
-# "Nano Banana Pro" -> Pro (High Quality)
 MODEL_MAP = {
-    "nano-banana": "gemini-1.5-flash",
-    "nano-banana-pro": "gemini-1.5-pro",
+    "standard": "gemini-2.5-flash-image",
+    "high": "gemini-3-pro-image-preview", # hypothetical, assuming better model for high quality
 }
 
 def generate_room_image(
-    room_type: str,
-    design_style: str,
-    architect: str,
-    designer: str,
-    color_wheel: str,
-    aspect_ratio: str,
-    model_id: str = "nano-banana"
+    room_type_id: str,
+    design_style_id: str,
+    architect_id: str,
+    designer_id: str,
+    color_wheel_id: str,
+    aspect_ratio_id: str,
+    model_id: str = "standard"
 ):
-    try:
-        # Construct Prompt
-        prompt = f"""Generate a {room_type} room scene using the details of the {design_style} design style
+    # Data Lookup
+    all_data = get_data()
+    style_obj = next((s for s in all_data['styles'] if s['id'] == design_style_id), None)
+    
+    def clean_name(s): return s.replace('-', ' ').title()
 
-Use the following design parameters:
+    style_name = style_obj['name'] if style_obj else clean_name(design_style_id)
+    mood = style_obj['mood'] if style_obj else ""
+    note = style_obj['designerNote'] if style_obj else ""
+    
+    room_details = get_room_details(design_style_id, room_type_id)
+    arch_elements = room_details.get('architectural_elements', '')
+    room_specifics = room_details.get('room_specifics', '')
+    
+    color_details = get_color_details(design_style_id, color_wheel_id)
+    
+    room_name = clean_name(room_type_id)
+    architect_name = clean_name(architect_id)
+    designer_name = clean_name(designer_id)
 
-Architect Name: {architect}
+    # Aspect Ratio Logic
+    ratio_map = {
+        "1:1": "Square aspect ratio (1:1)",
+        "4:3": "Standard landscape aspect ratio (4:3)",
+        "16:9": "Wide cinematic aspect ratio (16:9)"
+    }
+    ratio_instruction = ratio_map.get(aspect_ratio_id, "Standard Ratio")
 
-Designer Name: {designer}
+    # Prompt Construction
+    prompt = f"""Generate a photorealistic {room_name} interior.
+    
+Design Style: {style_name}
+Mood: {mood}
+Designer Note: {note}
 
-Color Wheel {color_wheel}
+Architectural Context:
+{arch_elements}
 
-Create the image in aspect ratio {aspect_ratio}"""
+Room Features:
+{room_specifics}
 
-        print(f"Generating with Prompt:\n{prompt}")
+Color Palette ({clean_name(color_wheel_id)} Scheme):
+{color_details}
 
-        # Select Model
-        real_model_name = MODEL_MAP.get(model_id, "gemini-1.5-flash")
-        model = genai.GenerativeModel(real_model_name)
+References:
+Architect: {architect_name}
+Designer: {designer_name}
 
-        # Generate Content
-        # Note: image generation isn't supported in all 'text' models via generate_content.
-        # But assuming the user wants an IMAGE generation.
-        # The Python SDK for Imagen (via Gemini) uses specific methods.
-        # However, standard Gemini models are multimodal (text/image in, text out).
-        # FOR IMAGE GENERATION: We usually use Imagen 3 on Vertex AI or distinct APIs.
-        # BUT, if the user assumes Gemini does it:
-        # We will assume this is a text-to-image request. 
-        # Currently publicly available Gemini models are primarily Text/Multimodal-Input -> Text-Output.
-        # UNLESS the user implies "Imagen" via Gemini.
-        # OR we are using a specific endpoint.
-        # Given the instruction "Generate a [room type] room scene", I must assume Image Generation.
+Format: {ratio_instruction}
+High quality, detailed, architectural photography, 8k resolution."""
+
+    print(f"Generating with Prompt:\n{prompt}")
+
+    # Determine Model ID
+    # Use flash for everything unless 'high' is requested (if mapped)
+    # Just reusing previous logic structure but simplified
+    target_model = "gemini-2.5-flash-image"
+    if model_id == "high":
+         # Use a better model if available, or just same one for now
+         target_model = "gemini-2.5-flash-image" 
+    
+    # Try Generation
+    if client:
+        try:
+            print(f"Generating with model: {target_model}")
+            
+            response = client.models.generate_content(
+                model=target_model,
+                contents=prompt,
+            )
+            
+            # Parse Response
+            if response.candidates:
+                for part in response.candidates[0].content.parts:
+                    if part.inline_data:
+                        # Convert raw bytes to base64 data URL for frontend
+                        import base64
+                        b64_data = base64.b64encode(part.inline_data.data).decode('utf-8')
+                        mime = part.inline_data.mime_type or "image/jpeg"
+                        data_url = f"data:{mime};base64,{b64_data}"
+                        
+                        return {
+                            "success": True,
+                            "data": data_url,
+                            "model_used": target_model,
+                            "prompt": prompt
+                        }
+                        
+            print("No inline image data found in response.")
+            
+        except Exception as e:
+            print(f"Model {target_model} failed: {e}")
+
+    # Fallback to Placeholder
+    print("Generation failed. Using Placeholder.")
+    time.sleep(2) 
+    return {
+        "success": False, # Changed to False to indicate failure in logs, but previously was True?
+        # Actually client handles errors? generate_routes line 60: if response_data.get("success")
+        # So I should return success=False if it actually failed, so the route can send a placeholder?
+        # Route logic: if success: url=data else: url=placeholder.
+        # So here if I return success=True with a placeholder, the route uses it.
+        # If I return success=False, the route uses ITS OWN placeholder.
+        # Let's keep it consistent: failed generation -> success=False.
         
-        # NOTE: The `google-generativeai` library is typically for Gemini (LLM).
-        # Image generation is `genai.ImageGenerationModel` (Imagen).
-        # I will attempt to use a standard Imagen workflow if available, 
-        # or fallback to a mock if I cannot authenticate Image generation or if the library differs.
-        # Let's try to find an Imagen model.
-        
-        # For this foundation step, I will simplify:
-        # If I can't reach an image model, I might return a text description as a placeholder?
-        # NO, user wants a Visualizer.
-        # I will assume "gemini-pro-vision" or similar is NOT for generation.
-        # I will try to use the `imagen-3.0-generate-001` if possible, or `image-generation-001`.
-        
-        # Let's write code that TRIES to generate an image.
-        # Since I don't know the exact subscribed models, I'll use a placeholder URL for the "image" if fail.
-        # Actually, for Foundation, the instruction says "Components... Integration... Business Logic...".
-        # It doesn't explicitly say "Must successfully generate 4k images now".
-        # I will implement the code to call an image generation capability.
-        
-        # Using the latest SDK pattern for Imagen:
-        # model = genai.ImageGenerationModel("imagen-3.0-generate-001")
-        # response = model.generate_images(prompt=prompt)
-        
-        # I will use a generic try/except block to allow for "simulation" if credentials fail.
-        
-        return {
-            "success": True,
-            "data": "https://placehold.co/1024x1024?text=Generated+Image+Placeholder", # Placeholder for foundation
-            "prompt_used": prompt,
-            "model_used": real_model_name
-        }
-
-    except Exception as e:
-        print(f"Generation Error: {e}")
-        return {
-            "success": False,
-            "error": str(e)
-        }
+        "error": "Generation API failed or returned no image.",
+        "prompt": prompt
+    }

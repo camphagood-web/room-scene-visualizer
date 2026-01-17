@@ -1,4 +1,4 @@
-# start-app.ps1
+# ./start-app.ps1
 
 Write-Host "Starting Room Scene Visualizer..." -ForegroundColor Cyan
 

@@ -42,28 +42,38 @@ async def generate_images(request: GenerateRequest):
         room_name = format_name(room_id)
         
         try:
-            image_url = generate_room_image(
-                room_type=room_name,
-                design_style=style_name,
-                architect=architect_name,
-                designer=designer_name,
-                color_wheel=request.color_wheel_id,
-                aspect_ratio=request.aspect_ratio_id,
+            # generate_room_image returns a dict: { success, data, error, ... }
+            response_data = generate_room_image(
+                room_type_id=room_id,
+                design_style_id=request.design_style_id,
+                architect_id=request.architect_id,
+                designer_id=request.designer_id,
+                color_wheel_id=request.color_wheel_id,
+                aspect_ratio_id=request.aspect_ratio_id,
                 model_id=request.image_quality_id
             )
             
+            # Extract URL for internal storage (Gallery/Session) which expects a string
+            if response_data.get("success"):
+                image_url = response_data.get("data")
+            else:
+                print(f"Failed to generate {room_name}: {response_data.get('error')}")
+                image_url = "https://placehold.co/1024x1024?text=Generation+Failed"
+
+            # API Response: Frontend expects { result: { success, data, ... } }
             results.append({
                 "room_type_id": room_id,
-                "result": image_url
+                "result": response_data
             })
 
+            # Session Storage: Expects { url: "string_url" }
             generated_images.append({
                 "id": str(uuid.uuid4()),
                 "roomType": {
                     "id": room_id,
                     "name": room_name
                 },
-                "url": image_url,
+                "url": image_url, # Ensure this is a string
                 "selected": False
             })
             

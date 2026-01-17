@@ -19,11 +19,11 @@ export function ThemeToggle() {
     return (
         <button
             onClick={toggleTheme}
-            className="p-2 rounded-md hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors"
+            className="group grid h-9 w-9 place-items-center rounded-md hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors"
             aria-label="Toggle theme"
         >
-            <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0 text-stone-900 dark:text-stone-100" />
-            <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100 top-2 left-2 text-stone-900 dark:text-stone-100" />
+            <Sun className="col-start-1 row-start-1 h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0 text-stone-900 dark:text-stone-100" />
+            <Moon className="col-start-1 row-start-1 h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100 text-stone-900 dark:text-stone-100" />
             <span className="sr-only">Toggle theme</span>
         </button>
     )

@@ -1,0 +1,13 @@
+/* Design Tokens for Design Room Generator */
+
+:root {
+  /* Colors */
+  --color-primary: amber;
+  --color-secondary: cyan;
+  --color-neutral: stone;
+
+  /* Typography */
+  --font-heading: "DM Sans", sans-serif;
+  --font-body: "DM Sans", sans-serif;
+  --font-mono: "IBM Plex Mono", monospace;
+}

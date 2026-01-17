@@ -1,0 +1,74 @@
+{
+  "designStyles": [
+    {
+      "id": "refined-southern-traditional",
+      "name": "Refined Southern Traditional",
+      "mood": "Historic, layered, gracious",
+      "undertone": "Warm neutral + blue/green heritage hues",
+      "palette": {
+        "light": {
+          "dominant": ["warm white"],
+          "grounding": ["soft taupe"],
+          "accent": ["heritage blue"]
+        },
+        "medium": {
+          "dominant": ["warm linen"],
+          "grounding": ["muted clay"],
+          "accent": ["dusty teal"]
+        },
+        "dark": {
+          "dominant": ["deep umber"],
+          "grounding": ["charcoal"],
+          "accent": ["hunter green"]
+        }
+      }
+    }
+  ],
+  "architects": [
+    {
+      "id": "historical-concepts",
+      "name": "Historical Concepts",
+      "styleIds": ["refined-southern-traditional"]
+    }
+  ],
+  "designers": [
+    {
+      "id": "bunny-williams",
+      "name": "Bunny Williams",
+      "styleIds": ["refined-southern-traditional"]
+    }
+  ],
+  "roomTypes": [
+    { "id": "living-room", "name": "Living Room" },
+    { "id": "dining-room", "name": "Dining Room" }
+  ],
+  "generationRequests": [
+    {
+      "id": "request-001",
+      "createdAt": "2026-01-17T14:32:00Z",
+      "roomTypeIds": ["living-room", "dining-room"],
+      "designStyleId": "refined-southern-traditional",
+      "architectId": "historical-concepts",
+      "designerId": "bunny-williams",
+      "colorWheel": "medium",
+      "aspectRatio": "16:9",
+      "imageQuality": "high"
+    }
+  ],
+  "generatedImages": [
+    {
+      "id": "img-001",
+      "requestId": "request-001",
+      "roomTypeId": "living-room",
+      "url": "/samples/room-1.jpg",
+      "createdAt": "2026-01-17T14:33:10Z"
+    },
+    {
+      "id": "img-002",
+      "requestId": "request-001",
+      "roomTypeId": "dining-room",
+      "url": "/samples/room-2.jpg",
+      "createdAt": "2026-01-17T14:34:22Z"
+    }
+  ]
+}

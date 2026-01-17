@@ -1,0 +1,198 @@
+{
+  "_meta": {
+    "models": {
+      "generationSessions": "A completed generation request grouping all images from a single run. Contains the parameters used (style, architect, designer, color wheel, aspect ratio) and when it was created.",
+      "generatedImages": "Individual images output from the AI, each linked to a session and showing a specific room type.",
+      "filterOptions": "Available options for filtering the gallery by room type, style, architect, designer, and date range."
+    },
+    "relationships": [
+      "Each GenerationSession contains one or more GeneratedImages",
+      "Each GeneratedImage belongs to exactly one GenerationSession",
+      "Filter options reference the same styles, architects, and designers used during generation"
+    ]
+  },
+  "generationSessions": [
+    {
+      "id": "session-001",
+      "createdAt": "2026-01-17T14:32:00Z",
+      "designStyle": {
+        "id": "refined-southern-traditional",
+        "name": "Refined Southern Traditional"
+      },
+      "architect": {
+        "id": "historical-concepts",
+        "name": "Historical Concepts"
+      },
+      "designer": {
+        "id": "bunny-williams",
+        "name": "Bunny Williams"
+      },
+      "colorWheel": "Medium",
+      "aspectRatio": "16:9",
+      "imageQuality": "High",
+      "images": [
+        {
+          "id": "img-001",
+          "roomType": { "id": "living-room", "name": "Living Room" },
+          "url": "/samples/session-001-living-room.jpg",
+          "selected": false
+        },
+        {
+          "id": "img-002",
+          "roomType": { "id": "dining-room", "name": "Dining Room" },
+          "url": "/samples/session-001-dining-room.jpg",
+          "selected": false
+        },
+        {
+          "id": "img-003",
+          "roomType": { "id": "kitchen", "name": "Kitchen" },
+          "url": "/samples/session-001-kitchen.jpg",
+          "selected": false
+        }
+      ]
+    },
+    {
+      "id": "session-002",
+      "createdAt": "2026-01-16T09:15:00Z",
+      "designStyle": {
+        "id": "modern-mountain-retreat",
+        "name": "Modern Mountain Retreat"
+      },
+      "architect": {
+        "id": "olson-kundig",
+        "name": "Olson Kundig"
+      },
+      "designer": {
+        "id": "kelly-wearstler",
+        "name": "Kelly Wearstler"
+      },
+      "colorWheel": "Dark",
+      "aspectRatio": "4:3",
+      "imageQuality": "High",
+      "images": [
+        {
+          "id": "img-004",
+          "roomType": { "id": "living-room", "name": "Living Room" },
+          "url": "/samples/session-002-living-room.jpg",
+          "selected": false
+        },
+        {
+          "id": "img-005",
+          "roomType": { "id": "bathroom", "name": "Bathroom" },
+          "url": "/samples/session-002-bathroom.jpg",
+          "selected": false
+        }
+      ]
+    },
+    {
+      "id": "session-003",
+      "createdAt": "2026-01-15T16:45:00Z",
+      "designStyle": {
+        "id": "southern-coastal-luxe",
+        "name": "Southern Coastal Luxe"
+      },
+      "architect": {
+        "id": "peter-block",
+        "name": "Peter Block Architects"
+      },
+      "designer": {
+        "id": "amanda-lindroth",
+        "name": "Amanda Lindroth"
+      },
+      "colorWheel": "Light",
+      "aspectRatio": "1:1",
+      "imageQuality": "Standard",
+      "images": [
+        {
+          "id": "img-006",
+          "roomType": { "id": "living-room", "name": "Living Room" },
+          "url": "/samples/session-003-living-room.jpg",
+          "selected": false
+        },
+        {
+          "id": "img-007",
+          "roomType": { "id": "dining-room", "name": "Dining Room" },
+          "url": "/samples/session-003-dining-room.jpg",
+          "selected": false
+        },
+        {
+          "id": "img-008",
+          "roomType": { "id": "kitchen", "name": "Kitchen" },
+          "url": "/samples/session-003-kitchen.jpg",
+          "selected": false
+        },
+        {
+          "id": "img-009",
+          "roomType": { "id": "bathroom", "name": "Bathroom" },
+          "url": "/samples/session-003-bathroom.jpg",
+          "selected": false
+        }
+      ]
+    },
+    {
+      "id": "session-004",
+      "createdAt": "2026-01-10T11:20:00Z",
+      "designStyle": {
+        "id": "palm-beach-regency",
+        "name": "Palm Beach Regency"
+      },
+      "architect": {
+        "id": "addison-mizner",
+        "name": "Addison Mizner"
+      },
+      "designer": {
+        "id": "celerie-kemble",
+        "name": "Celerie Kemble"
+      },
+      "colorWheel": "Medium",
+      "aspectRatio": "16:9",
+      "imageQuality": "High",
+      "images": [
+        {
+          "id": "img-010",
+          "roomType": { "id": "dining-room", "name": "Dining Room" },
+          "url": "/samples/session-004-dining-room.jpg",
+          "selected": false
+        }
+      ]
+    }
+  ],
+  "filterOptions": {
+    "roomTypes": [
+      { "id": "living-room", "name": "Living Room" },
+      { "id": "dining-room", "name": "Dining Room" },
+      { "id": "kitchen", "name": "Kitchen" },
+      { "id": "bathroom", "name": "Bathroom" }
+    ],
+    "designStyles": [
+      { "id": "refined-southern-traditional", "name": "Refined Southern Traditional" },
+      { "id": "southern-coastal-luxe", "name": "Southern Coastal Luxe" },
+      { "id": "modern-farmhouse-upscale", "name": "Modern Farmhouse (Upscale)" },
+      { "id": "transitional-classic", "name": "Transitional Classic" },
+      { "id": "modern-southern-minimalism", "name": "Modern Southern Minimalism" },
+      { "id": "modern-mountain-retreat", "name": "Modern Mountain Retreat" },
+      { "id": "palm-beach-regency", "name": "Palm Beach Regency" },
+      { "id": "florida-tropical-modern", "name": "Florida Tropical Modern" }
+    ],
+    "dateRanges": [
+      { "id": "today", "name": "Today" },
+      { "id": "this-week", "name": "This Week" },
+      { "id": "this-month", "name": "This Month" },
+      { "id": "all-time", "name": "All Time" }
+    ]
+  },
+  "activeFilters": {
+    "roomTypes": [],
+    "designStyles": [],
+    "dateRange": "all-time"
+  },
+  "selectedImages": [],
+  "lightboxState": {
+    "isOpen": false,
+    "currentImageId": null
+  },
+  "downloadModal": {
+    "isOpen": false,
+    "zipFileName": ""
+  }
+}

@@ -1,0 +1,198 @@
+{
+  "_meta": {
+    "models": {
+      "designStyles": "A curated interior design style with mood, undertone, and color palette guidance for room generation.",
+      "architects": "Representative architects associated with design styles, influencing architectural elements in generated rooms.",
+      "designers": "Interior designers associated with design styles, influencing furniture and decor in generated rooms.",
+      "roomTypes": "The types of rooms that can be generated (Living Room, Dining Room, Kitchen, Bathroom).",
+      "colorWheelOptions": "Color intensity options (Light, Medium, Dark) that affect the palette used in generation.",
+      "aspectRatios": "Image dimension ratios for the generated output.",
+      "imageQualityOptions": "Quality levels that map to different AI models internally.",
+      "generationProgress": "Sample state representing an in-progress generation job."
+    },
+    "relationships": [
+      "Each DesignStyle has many Architects (filtered selection)",
+      "Each DesignStyle has many Designers (filtered selection)",
+      "Architects and Designers can belong to multiple DesignStyles",
+      "GenerationProgress tracks multiple room types being generated sequentially"
+    ]
+  },
+  "designStyles": [
+    {
+      "id": "refined-southern-traditional",
+      "name": "Refined Southern Traditional",
+      "mood": "Historic, layered, gracious",
+      "undertone": "Warm neutral + blue/green heritage hues",
+      "designerNote": "This palette behaves like a string quartet—formal, restrained, and timeless. Avoid high-contrast whites."
+    },
+    {
+      "id": "southern-coastal-luxe",
+      "name": "Southern Coastal Luxe",
+      "mood": "Light, refined, NOT beachy",
+      "undertone": "Mineral whites + aquatic pastels",
+      "designerNote": "Think Debussy, not Jimmy Buffett. Keep saturation low and finishes refined."
+    },
+    {
+      "id": "modern-farmhouse-upscale",
+      "name": "Modern Farmhouse (Upscale)",
+      "mood": "Warm, honest, elevated",
+      "undertone": "Neutral warmth with restrained contrast",
+      "designerNote": "This is a folk chord progression—simple, grounded, emotionally familiar."
+    },
+    {
+      "id": "transitional-classic",
+      "name": "Transitional Classic",
+      "mood": "Safe luxury, resale-friendly",
+      "undertone": "Balanced warm/cool neutrality",
+      "designerNote": "This palette is a perfect major chord—almost impossible to get wrong."
+    },
+    {
+      "id": "modern-southern-minimalism",
+      "name": "Modern Southern Minimalism",
+      "mood": "Clean, architectural, soulful",
+      "undertone": "Plaster whites + organic restraint",
+      "designerNote": "Silence matters here. Negative space is part of the palette."
+    },
+    {
+      "id": "modern-mountain-retreat",
+      "name": "Modern Mountain Retreat",
+      "mood": "Cozy sophistication, nature-forward",
+      "undertone": "Stone, wood, smoke",
+      "designerNote": "This palette is a minor key with warmth—emotional but grounded."
+    },
+    {
+      "id": "appalachian-rustic-luxury",
+      "name": "Appalachian Rustic Luxury",
+      "mood": "Heritage, craft, strength",
+      "undertone": "Earth pigments + iron",
+      "designerNote": "This is a baritone chord—rich, masculine, grounded. Texture is critical."
+    },
+    {
+      "id": "lowcountry-cottage-elegance",
+      "name": "Lowcountry Cottage Elegance",
+      "mood": "Breezy, layered, hospitable, texture-rich",
+      "undertone": "Sun-washed naturals + faded Oushak pigments",
+      "designerNote": "Texture is the music here. The palette relies on the interplay between rustic wood and refined finishes."
+    },
+    {
+      "id": "southern-english-romantic",
+      "name": "Southern English Romantic",
+      "mood": "Layered, curated, soft, feminine",
+      "undertone": "Faded pastels + cool, damp earth tones",
+      "designerNote": "This palette evokes a feeling of wandering through an overgrown, mossy garden. Use tactile textures like velvet and raw silk."
+    },
+    {
+      "id": "southern-french-eclectic",
+      "name": "Southern French Eclectic",
+      "mood": "Sun-drenched, rustic, collected, warm",
+      "undertone": "Terracotta, sun-bleached linen, dark patina",
+      "designerNote": "This style relies on the interplay of rustic elements and high-quality, aged textiles. Avoid anything synthetic or shiny."
+    },
+    {
+      "id": "palm-beach-regency",
+      "name": "Palm Beach Regency",
+      "mood": "Glamorous, vibrant, geometric, preppy",
+      "undertone": "High-gloss white + saturated jewel tones",
+      "designerNote": "This palette is intentionally high-contrast and joyful. Use lacquered surfaces and crisp, graphic patterns."
+    },
+    {
+      "id": "florida-tropical-modern",
+      "name": "Florida Tropical Modern",
+      "mood": "Minimal, indoor-outdoor flow, natural",
+      "undertone": "Warm concrete, dark wood, rich greens",
+      "designerNote": "This palette is sleek and relies on the jungle outside for its main color accents. Focus on raw materials and clean lines."
+    },
+    {
+      "id": "virginia-hunt-country",
+      "name": "Virginia Hunt Country",
+      "mood": "Equestrian, tailored, heritage, leather",
+      "undertone": "Earthy greens, rich browns, sophisticated reds",
+      "designerNote": "A tailored, masculine palette that feels inherited and well-maintained. Leather and plaid are essential textures."
+    }
+  ],
+  "architects": [
+    { "id": "historical-concepts", "name": "Historical Concepts", "styleIds": ["refined-southern-traditional", "southern-english-romantic", "lowcountry-cottage-elegance"] },
+    { "id": "lew-oliver", "name": "Lew Oliver, Inc.", "styleIds": ["refined-southern-traditional"] },
+    { "id": "ts-adams-studio", "name": "T.S. Adams Studio", "styleIds": ["refined-southern-traditional"] },
+    { "id": "peter-block", "name": "Peter Block Architects", "styleIds": ["southern-coastal-luxe", "lowcountry-cottage-elegance"] },
+    { "id": "patterson-custom-homes", "name": "Patterson Custom Homes", "styleIds": ["modern-farmhouse-upscale"] },
+    { "id": "jim-strickland", "name": "Jim Strickland", "styleIds": ["modern-farmhouse-upscale"] },
+    { "id": "ramsey-architects", "name": "Ramsey Architects", "styleIds": ["transitional-classic", "modern-southern-minimalism"] },
+    { "id": "mgpb", "name": "MGPB", "styleIds": ["transitional-classic", "modern-southern-minimalism"] },
+    { "id": "clark-menefee", "name": "Clark & Menefee", "styleIds": ["modern-mountain-retreat"] },
+    { "id": "clb-architects", "name": "CLB Architects", "styleIds": ["modern-mountain-retreat"] },
+    { "id": "olson-kundig", "name": "Olson Kundig", "styleIds": ["modern-mountain-retreat"] },
+    { "id": "james-farmer", "name": "James Farmer", "styleIds": ["southern-english-romantic"] },
+    { "id": "bobby-mcalpine", "name": "Bobby McAlpine", "styleIds": ["southern-french-eclectic"] },
+    { "id": "fairfax-sammons", "name": "Fairfax, Sammons & Partners", "styleIds": ["southern-french-eclectic"] },
+    { "id": "addison-mizner", "name": "Addison Mizner", "styleIds": ["palm-beach-regency"] },
+    { "id": "maurice-fatio", "name": "Maurice Fatio", "styleIds": ["palm-beach-regency"] },
+    { "id": "alfred-browning-parker", "name": "Alfred Browning Parker", "styleIds": ["florida-tropical-modern"] },
+    { "id": "paul-rudolph", "name": "Paul Rudolph", "styleIds": ["florida-tropical-modern"] },
+    { "id": "thomas-jefferson", "name": "Thomas Jefferson (influence)", "styleIds": ["virginia-hunt-country"] },
+    { "id": "classical-revival", "name": "Classical Revival", "styleIds": ["virginia-hunt-country"] }
+  ],
+  "designers": [
+    { "id": "bunny-williams", "name": "Bunny Williams", "styleIds": ["refined-southern-traditional"] },
+    { "id": "suzanne-kasler", "name": "Suzanne Kasler", "styleIds": ["refined-southern-traditional", "transitional-classic", "southern-french-eclectic"] },
+    { "id": "mark-d-sikes", "name": "Mark D. Sikes", "styleIds": ["refined-southern-traditional"] },
+    { "id": "alexa-hampton", "name": "Alexa Hampton", "styleIds": ["refined-southern-traditional"] },
+    { "id": "amanda-lindroth", "name": "Amanda Lindroth", "styleIds": ["southern-coastal-luxe"] },
+    { "id": "bria-hammel", "name": "Bria Hammel", "styleIds": ["southern-coastal-luxe"] },
+    { "id": "shea-mcgee", "name": "Shea McGee", "styleIds": ["southern-coastal-luxe"] },
+    { "id": "heather-chadduck", "name": "Heather Chadduck", "styleIds": ["southern-coastal-luxe"] },
+    { "id": "jean-stoffer", "name": "Jean Stoffer", "styleIds": ["modern-farmhouse-upscale"] },
+    { "id": "amber-lewis", "name": "Amber Lewis", "styleIds": ["modern-farmhouse-upscale"] },
+    { "id": "studio-mcgee", "name": "Studio McGee", "styleIds": ["modern-farmhouse-upscale"] },
+    { "id": "kate-marker", "name": "Kate Marker", "styleIds": ["modern-farmhouse-upscale"] },
+    { "id": "victoria-hagan", "name": "Victoria Hagan", "styleIds": ["transitional-classic"] },
+    { "id": "thomas-obrien", "name": "Thomas O'Brien", "styleIds": ["transitional-classic"] },
+    { "id": "jake-arnold", "name": "Jake Arnold", "styleIds": ["modern-southern-minimalism"] },
+    { "id": "athena-calderone", "name": "Athena Calderone", "styleIds": ["modern-southern-minimalism"] },
+    { "id": "studio-shamshiri", "name": "Studio Shamshiri", "styleIds": ["modern-southern-minimalism"] },
+    { "id": "commune-design", "name": "Commune Design", "styleIds": ["modern-mountain-retreat"] },
+    { "id": "brad-ford", "name": "Brad Ford", "styleIds": ["modern-mountain-retreat"] },
+    { "id": "kelly-wearstler", "name": "Kelly Wearstler", "styleIds": ["modern-mountain-retreat", "florida-tropical-modern"] },
+    { "id": "janie-molster", "name": "Janie Molster", "styleIds": ["southern-english-romantic"] },
+    { "id": "phoebe-howard", "name": "Phoebe Howard", "styleIds": ["southern-english-romantic"] },
+    { "id": "gerrie-bremermann", "name": "Gerrie Bremermann", "styleIds": ["southern-french-eclectic"] },
+    { "id": "beth-webb", "name": "Beth Webb", "styleIds": ["lowcountry-cottage-elegance"] },
+    { "id": "summerour-interiors", "name": "Summerour Interiors", "styleIds": ["lowcountry-cottage-elegance"] },
+    { "id": "celerie-kemble", "name": "Celerie Kemble", "styleIds": ["palm-beach-regency"] },
+    { "id": "mario-buatta", "name": "Mario Buatta", "styleIds": ["palm-beach-regency"] },
+    { "id": "sawyer-berson", "name": "Sawyer Berson", "styleIds": ["florida-tropical-modern"] },
+    { "id": "barry-dixon", "name": "Barry Dixon", "styleIds": ["virginia-hunt-country"] },
+    { "id": "gil-schafer", "name": "Gil Schafer", "styleIds": ["virginia-hunt-country"] }
+  ],
+  "roomTypes": [
+    { "id": "living-room", "name": "Living Room" },
+    { "id": "dining-room", "name": "Dining Room" },
+    { "id": "kitchen", "name": "Kitchen" },
+    { "id": "bathroom", "name": "Bathroom" }
+  ],
+  "colorWheelOptions": [
+    { "id": "light", "name": "Light" },
+    { "id": "medium", "name": "Medium" },
+    { "id": "dark", "name": "Dark" }
+  ],
+  "aspectRatios": [
+    { "id": "1:1", "name": "1:1", "description": "Square" },
+    { "id": "4:3", "name": "4:3", "description": "Standard" },
+    { "id": "16:9", "name": "16:9", "description": "Widescreen" }
+  ],
+  "imageQualityOptions": [
+    { "id": "standard", "name": "Standard", "description": "Faster generation" },
+    { "id": "high", "name": "High", "description": "Enhanced detail" }
+  ],
+  "generationProgress": {
+    "isGenerating": true,
+    "totalRoomTypes": 3,
+    "completedRoomTypes": 1,
+    "currentRoomType": "Dining Room",
+    "segments": [
+      { "roomTypeId": "living-room", "roomTypeName": "Living Room", "status": "completed" },
+      { "roomTypeId": "dining-room", "roomTypeName": "Dining Room", "status": "in-progress" },
+      { "roomTypeId": "kitchen", "roomTypeName": "Kitchen", "status": "pending" }
+    ]
+  }
+}

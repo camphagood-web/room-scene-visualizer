@@ -127,7 +127,7 @@ export function Generator({
         onAspectRatioSelect?.(ratioId)
     }
 
-    const handleQualitySelect = (qualityId: 'standard' | 'high') => {
+    const handleQualitySelect = (qualityId: '1k' | '2k' | '4k') => {
         setSelectedQualityId(qualityId)
         onImageQualitySelect?.(qualityId)
     }
@@ -276,7 +276,7 @@ export function Generator({
                             label={quality.name}
                             sublabel={quality.description}
                             isSelected={selectedQualityId === quality.id}
-                            onClick={() => handleQualitySelect(quality.id as 'standard' | 'high')}
+                            onClick={() => handleQualitySelect(quality.id as '1k' | '2k' | '4k')}
                             disabled={isGenerating}
                         />
                     ))}

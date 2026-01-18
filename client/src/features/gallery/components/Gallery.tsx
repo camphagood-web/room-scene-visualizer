@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import type { GalleryProps, GenerationSession } from '../types'
 import { GalleryFilters } from './GalleryFilters'
-import { SessionGroup } from './SessionGroup'
+import { ImageCard } from './ImageCard'
 import { Lightbox } from './Lightbox'
 import { DownloadModal } from './DownloadModal'
 
@@ -10,11 +10,11 @@ export function Gallery({
     filterOptions,
     activeFilters,
     selectedImages,
+    regeneratingImageIds,
     lightboxState,
     downloadModal,
     onFilterChange,
     onImageSelect,
-    onSessionSelect,
     onClearSelection,
     onImageView,
     onLightboxPrev,
@@ -80,6 +80,44 @@ export function Gallery({
         0
     )
 
+    const formatDate = (dateString: string) => {
+        const date = new Date(dateString)
+        const now = new Date()
+        const diffDays = Math.floor(
+            (now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24)
+        )
+
+        if (diffDays === 0) {
+            return `Today at ${date.toLocaleTimeString('en-US', {
+                hour: 'numeric',
+                minute: '2-digit',
+            })}`
+        }
+        if (diffDays === 1) {
+            return `Yesterday at ${date.toLocaleTimeString('en-US', {
+                hour: 'numeric',
+                minute: '2-digit',
+            })}`
+        }
+        if (diffDays < 7) {
+            return `${diffDays} days ago`
+        }
+        return date.toLocaleDateString('en-US', {
+            month: 'short',
+            day: 'numeric',
+            year: date.getFullYear() !== now.getFullYear() ? 'numeric' : undefined,
+        })
+    }
+
+    const imageCards = sessionsWithFilteredImages.flatMap((session) => {
+        const dateLabel = formatDate(session.createdAt)
+        return session.images.map((image) => ({
+            session,
+            image,
+            dateLabel,
+        }))
+    })
+
     // Generate default filename for download
     const defaultFileName = useMemo(() => {
         const date = new Date().toISOString().split('T')[0]
@@ -144,18 +182,20 @@ export function Gallery({
             />
 
             {/* Sessions */}
-            {sessionsWithFilteredImages.length > 0 ? (
-                <div className="space-y-6">
-                    {sessionsWithFilteredImages.map((session) => (
-                        <SessionGroup
-                            key={session.id}
+            {imageCards.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {imageCards.map(({ session, image, dateLabel }) => (
+                        <ImageCard
+                            key={image.id}
+                            image={image}
                             session={session}
-                            selectedImages={selectedImages}
-                            onImageSelect={onImageSelect}
-                            onImageView={onImageView}
-                            onSessionSelect={onSessionSelect}
-                            onDownloadSession={onDownloadSession}
-                            onRegenerate={onRegenerate}
+                            dateLabel={dateLabel}
+                            isSelected={selectedImages.includes(image.id)}
+                            isRegenerating={regeneratingImageIds.includes(image.id)}
+                            onSelect={() => onImageSelect?.(image.id)}
+                            onView={() => onImageView?.(image.id)}
+                            onDownloadSession={() => onDownloadSession?.(session.id)}
+                            onRegenerate={() => onRegenerate?.(session.id, image.id)}
                         />
                     ))}
                 </div>
@@ -196,6 +236,7 @@ export function Gallery({
                 onNext={onLightboxNext}
                 onClose={onLightboxClose}
                 onRegenerate={onRegenerate}
+                regeneratingImageIds={regeneratingImageIds}
             />
 
             {/* Download Modal */}

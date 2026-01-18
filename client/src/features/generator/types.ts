@@ -39,7 +39,7 @@ export interface AspectRatio {
 }
 
 export interface ImageQualityOption {
-    id: 'standard' | 'high'
+    id: '1k' | '2k' | '4k'
     name: string
     description: string
 }
@@ -69,7 +69,7 @@ export interface GeneratorSelections {
     designerId: string | null
     colorWheelId: 'light' | 'medium' | 'dark' | null
     aspectRatioId: '1:1' | '4:3' | '16:9' | null
-    imageQualityId: 'standard' | 'high' | null
+    imageQualityId: '1k' | '2k' | '4k' | null
 }
 
 // =============================================================================
@@ -107,7 +107,7 @@ export interface GeneratorProps {
     /** Called when user selects an aspect ratio */
     onAspectRatioSelect?: (ratioId: '1:1' | '4:3' | '16:9') => void
     /** Called when user selects an image quality */
-    onImageQualitySelect?: (qualityId: 'standard' | 'high') => void
+    onImageQualitySelect?: (qualityId: '1k' | '2k' | '4k') => void
     /** Called when user clicks the Generate button */
     onGenerate?: () => void
 }

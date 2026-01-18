@@ -12,10 +12,11 @@ else:
     print("Gemini API Key missing")
     client = None
 
-# Model Mapping
-MODEL_MAP = {
-    "standard": "gemini-2.5-flash-image",
-    "high": "gemini-3-pro-image-preview", # hypothetical, assuming better model for high quality
+# Quality Mapping
+QUALITY_CONFIG = {
+    "1k": {"model": "gemini-2.5-flash-image", "image_size": "1K"},
+    "2k": {"model": "gemini-3-pro-image-preview", "image_size": "2K"},
+    "4k": {"model": "gemini-3-pro-image-preview", "image_size": "4K"},
 }
 
 def generate_room_image(
@@ -25,7 +26,7 @@ def generate_room_image(
     designer_id: str,
     color_wheel_id: str,
     aspect_ratio_id: str,
-    model_id: str = "standard"
+    model_id: str = "1k"
 ):
     # Data Lookup
     all_data = get_data()
@@ -47,13 +48,21 @@ def generate_room_image(
     architect_name = clean_name(architect_id)
     designer_name = clean_name(designer_id)
 
-    # Aspect Ratio Logic
+    # Aspect Ratio Logic (prompt hint + API config)
     ratio_map = {
         "1:1": "Square aspect ratio (1:1)",
         "4:3": "Standard landscape aspect ratio (4:3)",
         "16:9": "Wide cinematic aspect ratio (16:9)"
     }
-    ratio_instruction = ratio_map.get(aspect_ratio_id, "Standard Ratio")
+    ratio_instruction = ratio_map.get(aspect_ratio_id, f"Aspect ratio ({aspect_ratio_id})")
+    allowed_aspect_ratios = {
+        "1:1", "2:3", "3:2", "3:4", "4:3", "4:5", "5:4", "9:16", "16:9", "21:9"
+    }
+    if aspect_ratio_id in allowed_aspect_ratios:
+        aspect_ratio = aspect_ratio_id
+    else:
+        print(f"Unknown aspect ratio '{aspect_ratio_id}', defaulting to 1:1")
+        aspect_ratio = "1:1"
 
     # Prompt Construction
     prompt = f"""Generate a photorealistic {room_name} interior.
@@ -78,38 +87,38 @@ Designer: {designer_name}
 Format: {ratio_instruction}
 High quality, detailed, architectural photography, 8k resolution."""
 
-    print(f"Generating with Prompt:\n{prompt}")
+    print("Gemini user prompt:\n" + prompt)
 
-    # Determine Model ID
-    # Use flash for everything unless 'high' is requested (if mapped)
-    # Just reusing previous logic structure but simplified
-    target_model = "gemini-2.5-flash-image"
-    if model_id == "high":
-         # Use a better model if available, or just same one for now
-         target_model = "gemini-2.5-flash-image" 
+    quality_settings = QUALITY_CONFIG.get(model_id, QUALITY_CONFIG["1k"])
+    target_model = quality_settings["model"]
+    image_size = quality_settings["image_size"]
     
     # Try Generation
     if client:
         try:
             print(f"Generating with model: {target_model}")
             
-            # Read System Prompt
+            # Read System Prompt (fail fast if missing or unreadable)
             import pathlib
+            current_file = pathlib.Path(__file__)
+            server_root = current_file.parent.parent
+            system_prompt_path = server_root / "data" / "system_prompt.txt"
             try:
-                current_file = pathlib.Path(__file__)
-                server_root = current_file.parent.parent
-                system_prompt_path = server_root / "data" / "system_prompt.txt"
-                
                 with open(system_prompt_path, "r", encoding="utf-8") as f:
                     system_instruction = f.read()
-                    print(f"Loaded system prompt from server/data ({len(system_instruction)} chars)")
+                print(f"Loaded system prompt from server/data ({len(system_instruction)} chars)")
+                print("Gemini system prompt:\n" + system_instruction)
             except Exception as e:
-                print(f"Error reading system prompt: {e}")
-                system_instruction = None
+                raise RuntimeError(f"System prompt load failed: {system_prompt_path} ({e})")
 
-            config = None
-            if system_instruction:
-                config = types.GenerateContentConfig(system_instruction=system_instruction)
+            print(f"Gemini image_config aspect_ratio: {aspect_ratio}, image_size: {image_size}")
+            config = types.GenerateContentConfig(
+                system_instruction=system_instruction,
+                image_config=types.ImageConfig(
+                    aspect_ratio=aspect_ratio,
+                    image_size=image_size
+                )
+            )
 
             response = client.models.generate_content(
                 model=target_model,

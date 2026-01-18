@@ -8,7 +8,8 @@ interface SessionGroupProps {
     onImageView?: (imageId: string) => void
     onSessionSelect?: (sessionId: string, selected: boolean) => void
     onDownloadSession?: (sessionId: string) => void
-    onRegenerate?: (sessionId: string) => void
+    onRegenerate?: (sessionId: string, imageId: string) => void
+    regeneratingImageIds?: string[]
 }
 
 export function SessionGroup({
@@ -19,6 +20,7 @@ export function SessionGroup({
     onSessionSelect,
     onDownloadSession,
     onRegenerate,
+    regeneratingImageIds = [],
 }: SessionGroupProps) {
     const allSelected = session.images.every((img) => selectedImages.includes(img.id))
     const someSelected = session.images.some((img) => selectedImages.includes(img.id))
@@ -50,6 +52,12 @@ export function SessionGroup({
             })
         }
     }
+
+    const dateLabel = formatDate(session.createdAt)
+
+    const primaryImageId = session.images[0]?.id
+    const isPrimaryRegenerating =
+        primaryImageId ? regeneratingImageIds.includes(primaryImageId) : false
 
     return (
         <div className="bg-white dark:bg-stone-900 rounded-xl border border-stone-200 dark:border-stone-800 overflow-hidden">
@@ -114,12 +122,18 @@ export function SessionGroup({
                     {/* Session actions */}
                     <div className="flex items-center gap-2 ml-8 sm:ml-0">
                         <button
-                            onClick={() => onRegenerate?.(session.id)}
-                            className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-stone-600 dark:text-stone-400 hover:text-amber-600 dark:hover:text-amber-400 transition-colors"
+                            onClick={() =>
+                                primaryImageId && onRegenerate?.(session.id, primaryImageId)
+                            }
+                            disabled={!primaryImageId || isPrimaryRegenerating}
+                            className={`flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-stone-600 dark:text-stone-400 transition-colors ${isPrimaryRegenerating
+                                    ? 'cursor-not-allowed opacity-60'
+                                    : 'hover:text-amber-600 dark:hover:text-amber-400'
+                                }`}
                             title="Regenerate with same parameters"
                         >
                             <svg
-                                className="w-4 h-4"
+                                className={`w-4 h-4 ${isPrimaryRegenerating ? 'animate-spin' : ''}`}
                                 fill="none"
                                 stroke="currentColor"
                                 viewBox="0 0 24 24"
@@ -158,15 +172,19 @@ export function SessionGroup({
 
             {/* Image grid */}
             <div className="p-4 sm:p-5">
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-[repeat(auto-fit,260px)] gap-4 sm:gap-5 max-w-[860px] mx-auto justify-start">
                     {session.images.map((image) => (
                         <ImageCard
                             key={image.id}
                             image={image}
-                            aspectRatio={session.aspectRatio}
+                            session={session}
+                            dateLabel={dateLabel}
                             isSelected={selectedImages.includes(image.id)}
+                            isRegenerating={regeneratingImageIds.includes(image.id)}
                             onSelect={() => onImageSelect?.(image.id)}
                             onView={() => onImageView?.(image.id)}
+                            onDownloadSession={() => onDownloadSession?.(session.id)}
+                            onRegenerate={() => onRegenerate?.(session.id, image.id)}
                         />
                     ))}
                 </div>

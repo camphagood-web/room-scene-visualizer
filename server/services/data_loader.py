@@ -113,8 +113,9 @@ def load_data():
         ]
         
         image_quality_options = [
-            { "id": "standard", "name": "Standard", "description": "Faster generation" },
-            { "id": "high", "name": "High", "description": "Enhanced detail" }
+            { "id": "1k", "name": "1K", "description": "Fastest generation" },
+            { "id": "2k", "name": "2K", "description": "Balanced detail" },
+            { "id": "4k", "name": "4K", "description": "Maximum detail" }
         ]
 
         # Store in cache structure

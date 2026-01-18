@@ -37,7 +37,7 @@ export interface GenerationSession {
     designer: Designer
     colorWheel: 'Light' | 'Medium' | 'Dark'
     aspectRatio: '1:1' | '4:3' | '16:9'
-    imageQuality: 'Standard' | 'High'
+    imageQuality: '1K' | '2K' | '4K' | 'standard' | 'high'
     images: GeneratedImage[]
 }
 
@@ -85,6 +85,8 @@ export interface GalleryProps {
     lightboxState: LightboxState
     /** Current download modal state */
     downloadModal: DownloadModalState
+    /** IDs of images currently regenerating */
+    regeneratingImageIds: string[]
 
     /** Called when user changes filter settings */
     onFilterChange?: (filters: ActiveFilters) => void
@@ -111,5 +113,5 @@ export interface GalleryProps {
     /** Called when user cancels the download modal */
     onDownloadCancel?: () => void
     /** Called when user wants to regenerate with same parameters */
-    onRegenerate?: (sessionId: string) => void
+    onRegenerate?: (sessionId: string, imageId: string) => void
 }

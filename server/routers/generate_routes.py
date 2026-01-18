@@ -83,6 +83,13 @@ async def generate_images(request: GenerateRequest):
         raise HTTPException(status_code=500, detail="No rooms generated")
 
     # Create and save session
+    quality_labels = {
+        "1k": "1K",
+        "2k": "2K",
+        "4k": "4K"
+    }
+    image_quality_label = quality_labels.get(request.image_quality_id, request.image_quality_id)
+
     session = {
         "id": str(uuid.uuid4()),
         "createdAt": datetime.utcnow().isoformat() + "Z", # proper ISO format
@@ -100,7 +107,7 @@ async def generate_images(request: GenerateRequest):
         },
         "colorWheel": request.color_wheel_id, # Assumes valid value passed 'Light'|'Medium'|'Dark'
         "aspectRatio": request.aspect_ratio_id.replace(":", ":"), # careful if format differs
-        "imageQuality": request.image_quality_id,
+        "imageQuality": image_quality_label,
         "images": generated_images
     }
 

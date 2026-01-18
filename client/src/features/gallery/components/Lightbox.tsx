@@ -8,7 +8,8 @@ interface LightboxProps {
     onPrev?: () => void
     onNext?: () => void
     onClose?: () => void
-    onRegenerate?: (sessionId: string) => void
+    onRegenerate?: (sessionId: string, imageId: string) => void
+    regeneratingImageIds?: string[]
 }
 
 export function Lightbox({
@@ -19,6 +20,7 @@ export function Lightbox({
     onNext,
     onClose,
     onRegenerate,
+    regeneratingImageIds = [],
 }: LightboxProps) {
     // Find current image and its session
     let currentImage: GeneratedImage | null = null
@@ -71,6 +73,8 @@ export function Lightbox({
 
     if (!isOpen || !currentImage || !currentSession) return null
 
+    const isRegenerating = regeneratingImageIds.includes(currentImage.id)
+
     return (
         <div className="fixed inset-0 z-50 bg-black/95 flex flex-col">
             {/* Header */}
@@ -87,11 +91,16 @@ export function Lightbox({
 
                 <div className="flex items-center gap-2 ml-4">
                     <button
-                        onClick={() => onRegenerate?.(currentSession!.id)}
-                        className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-white/80 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
+                        onClick={() => onRegenerate?.(currentSession!.id, currentImage.id)}
+                        disabled={isRegenerating}
+                        className={`flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-white/80 rounded-lg transition-colors ${isRegenerating
+                                ? 'cursor-not-allowed opacity-70'
+                                : 'hover:text-white hover:bg-white/10'
+                            }`}
+                        aria-busy={isRegenerating}
                     >
                         <svg
-                            className="w-4 h-4"
+                            className={`w-4 h-4 ${isRegenerating ? 'animate-spin' : ''}`}
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"

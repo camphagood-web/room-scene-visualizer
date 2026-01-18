@@ -1,6 +1,6 @@
 export type ColorWheel = 'light' | 'medium' | 'dark';
 export type AspectRatio = '1:1' | '4:3' | '16:9';
-export type ImageQuality = 'standard' | 'high';
+export type ImageQuality = '1k' | '2k' | '4k';
 
 export interface StylesResponse {
   styles: string[]

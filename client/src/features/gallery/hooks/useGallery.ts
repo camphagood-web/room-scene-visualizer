@@ -8,6 +8,7 @@ import type {
 } from '../types'
 import JSZip from 'jszip'
 import { saveAs } from 'file-saver'
+import { api } from '../../../services/api'
 
 // Mock options for filters - typically these would come from the API too
 const FILTER_OPTIONS: FilterOptions = {
@@ -39,24 +40,31 @@ export function useGallery() {
     })
     const [filterOptions, setFilterOptions] = useState<FilterOptions>(FILTER_OPTIONS)
     const [isLoading, setIsLoading] = useState(true)
+    const [regeneratingImageIds, setRegeneratingImageIds] = useState<string[]>([])
 
-    // Fetch sessions
-    useEffect(() => {
-        const fetchSessions = async () => {
-            try {
-                const response = await fetch('http://localhost:8000/api/gallery/sessions')
-                if (!response.ok) throw new Error('Failed to fetch sessions')
-                const data = await response.json()
-                setSessions(data)
-                setIsLoading(false)
-            } catch (error) {
-                console.error('Error fetching gallery sessions:', error)
+    const fetchSessions = useCallback(async (showLoading = false) => {
+        if (showLoading) {
+            setIsLoading(true)
+        }
+
+        try {
+            const response = await fetch('http://localhost:8000/api/gallery/sessions')
+            if (!response.ok) throw new Error('Failed to fetch sessions')
+            const data = await response.json()
+            setSessions(data)
+        } catch (error) {
+            console.error('Error fetching gallery sessions:', error)
+        } finally {
+            if (showLoading) {
                 setIsLoading(false)
             }
         }
-
-        fetchSessions()
     }, [])
+
+    // Fetch sessions
+    useEffect(() => {
+        fetchSessions(true)
+    }, [fetchSessions])
 
     // Derive filter options from sessions (or could fetch from API)
     useEffect(() => {
@@ -231,27 +239,55 @@ export function useGallery() {
         }
     }
 
-    const handleRegenerate = async (sessionId: string) => {
-        // Navigate to generator with preset values?
-        // Or call API directly?
-        // "Regenerate from an existing session" -> "Regenerate using the same parameters"
-        // Usually implies redirecting to Generator page with fields pre-filled.
+    const normalizeColorWheelId = (value: string) => value?.trim().toLowerCase()
 
-        const session = sessions.find(s => s.id === sessionId)
+    const normalizeImageQualityId = (value: string) => {
+        const normalized = value?.trim().toLowerCase()
+        if (normalized === '1k' || normalized === '2k' || normalized === '4k') {
+            return normalized
+        }
+        return null
+    }
+
+    const handleRegenerate = async (sessionId: string, imageId: string) => {
+        if (regeneratingImageIds.includes(imageId)) {
+            return
+        }
+
+        const session = sessions.find((s) => s.id === sessionId)
         if (!session) return
 
-        // Since we don't have a global state manager for "Generator Draft" exposed yet,
-        // we might need to pass state via navigation or URL params.
-        // For now, let's just log it or alert as "Feature coming soon" if not straightforward,
-        // OR we can implement a basic redirection using query params if Generator supports it.
+        const image = session.images.find((img) => img.id === imageId)
+        if (!image) return
 
-        // I will implementation a redirection to root '/' with state if possible,
-        // but the Generator page reads from local state.
-        // Let's assume for MVP we just log or alert.
-        console.log("Regenerate session", sessionId)
-        alert("Regeneration integration involves redirecting to Generator with preset values. Implementing basic stub.")
+        const colorWheelId = normalizeColorWheelId(session.colorWheel)
+        const imageQualityId = normalizeImageQualityId(session.imageQuality)
 
-        // Ideally: router.navigate('/', { state: { ...params } })
+        if (!colorWheelId || !imageQualityId) {
+            console.warn('Regeneration skipped due to incompatible session data.', sessionId)
+            return
+        }
+
+        setRegeneratingImageIds((prev) =>
+            prev.includes(imageId) ? prev : [...prev, imageId]
+        )
+
+        try {
+            await api.generateImages({
+                room_type_ids: [image.roomType.id],
+                design_style_id: session.designStyle.id,
+                architect_id: session.architect.id,
+                designer_id: session.designer.id,
+                color_wheel_id: colorWheelId,
+                aspect_ratio_id: session.aspectRatio,
+                image_quality_id: imageQualityId,
+            })
+            await fetchSessions()
+        } catch (error) {
+            console.error('Regeneration failed', error)
+        } finally {
+            setRegeneratingImageIds((prev) => prev.filter((id) => id !== imageId))
+        }
     }
 
     return {
@@ -261,6 +297,7 @@ export function useGallery() {
         selectedImages,
         lightboxState,
         downloadModal,
+        regeneratingImageIds,
         isLoading,
         onFilterChange: handleFilterChange,
         onImageSelect: handleImageSelect,

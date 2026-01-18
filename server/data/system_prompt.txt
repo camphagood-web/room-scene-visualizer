@@ -42,7 +42,7 @@ Flooring Emphasis (Critical Constraint):
 
 • Floor material texture, plank scale, and finish must be clearly readable
 
-• Floor will not have a rug on it.
+• Floor generate should NEVER have a rug on it.
 
 
 
@@ -73,6 +73,8 @@ Lighting & Realism:
 Output Requirements:
 
 • Produce one room scene image per request
+
+• FLoors should NEVER have rugs. All floors should be bare.
 
 • Maintain consistent composition when swapping flooring materials or finishes
 

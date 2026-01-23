@@ -5,6 +5,7 @@ import type { GlobalOptions } from '../../../services/api';
 import type {
     DesignStyle, Architect, Designer,
     RoomType, ColorWheelOption, AspectRatio, ImageQualityOption,
+    FlooringType, FloorBoardWidth,
     GenerationProgress
 } from '../types';
 
@@ -20,7 +21,9 @@ export function useGenerator() {
         roomTypes: [],
         colorWheelOptions: [],
         aspectRatios: [],
-        imageQualityOptions: []
+        imageQualityOptions: [],
+        flooringTypes: [],
+        floorBoardWidths: []
     });
 
     // Loading State
@@ -64,7 +67,9 @@ export function useGenerator() {
         designerId: string,
         colorWheelId: string,
         aspectRatioId: string,
-        imageQualityId: string
+        imageQualityId: string,
+        flooringTypeId?: string,
+        floorBoardWidthId?: string
     ) => {
         try {
             // Initialize Progress
@@ -115,7 +120,9 @@ export function useGenerator() {
                     designer_id: designerId,
                     color_wheel_id: colorWheelId,
                     aspect_ratio_id: aspectRatioId,
-                    image_quality_id: imageQualityId
+                    image_quality_id: imageQualityId,
+                    flooring_type_id: flooringTypeId,
+                    floor_board_width_id: floorBoardWidthId
                 });
 
                 if (response.success) {
@@ -159,6 +166,8 @@ export function useGenerator() {
         colorWheelOptions: options.colorWheelOptions,
         aspectRatios: options.aspectRatios,
         imageQualityOptions: options.imageQualityOptions,
+        flooringTypes: options.flooringTypes,
+        floorBoardWidths: options.floorBoardWidths,
         isLoading,
         error,
         generationProgress,

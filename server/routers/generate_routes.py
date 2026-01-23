@@ -16,6 +16,8 @@ class GenerateRequest(BaseModel):
     color_wheel_id: str
     aspect_ratio_id: str
     image_quality_id: str
+    flooring_type_id: Optional[str] = None
+    floor_board_width_id: Optional[str] = None
 
 class GenerationResponse(BaseModel):
     job_id: str
@@ -47,7 +49,9 @@ async def generate_images(request: GenerateRequest):
                 designer_id=request.designer_id,
                 color_wheel_id=request.color_wheel_id,
                 aspect_ratio_id=request.aspect_ratio_id,
-                model_id=request.image_quality_id
+                model_id=request.image_quality_id,
+                flooring_type_id=request.flooring_type_id,
+                floor_board_width_id=request.floor_board_width_id
             )
             
             # Extract URL for internal storage (Gallery/Session) which expects a string

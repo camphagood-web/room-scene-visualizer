@@ -1,0 +1,11 @@
+Use the following language to distinguish between the differnt types of flooring width when sending the width to the API
+
+# For 3 Inch Wooden Floors
+Flooring (Critical): Narrow, 3-inch wide planks
+
+# For 6 Inch Wooden Floors
+Flooring (Critical): standard, 6-inch wide planks
+
+# For 9 Inch Wooden Floors
+Flooring (Critical): Wide, 9-inch wide planks
+

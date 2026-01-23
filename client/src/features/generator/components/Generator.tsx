@@ -13,6 +13,8 @@ export function Generator({
     colorWheelOptions,
     aspectRatios,
     imageQualityOptions,
+    flooringTypes,
+    floorBoardWidths,
     generationProgress,
     onRoomTypeToggle,
     onDesignStyleSelect,
@@ -21,6 +23,8 @@ export function Generator({
     onColorWheelSelect,
     onAspectRatioSelect,
     onImageQualitySelect,
+    onFlooringTypeSelect,
+    onFloorBoardWidthSelect,
     onGenerate,
 }: GeneratorProps) {
     // Local selection state for the preview
@@ -31,6 +35,8 @@ export function Generator({
     const [selectedColorId, setSelectedColorId] = useState<string | null>(null)
     const [selectedAspectRatioId, setSelectedAspectRatioId] = useState<string | null>(null)
     const [selectedQualityId, setSelectedQualityId] = useState<string | null>(null)
+    const [selectedFlooringTypeId, setSelectedFlooringTypeId] = useState<string | null>(null)
+    const [selectedFloorBoardWidthId, setSelectedFloorBoardWidthId] = useState<string | null>(null)
 
     // Filter architects and designers based on selected style
     const filteredArchitects = useMemo(() => {
@@ -52,6 +58,17 @@ export function Generator({
         selectedColorId !== null &&
         selectedAspectRatioId !== null &&
         selectedQualityId !== null
+
+    // Build flooring display value
+    const flooringDisplayValue = (() => {
+        if (!selectedFlooringTypeId) return null
+        const flooringName = flooringTypes.find((f) => f.id === selectedFlooringTypeId)?.name
+        if (selectedFlooringTypeId === 'wood' && selectedFloorBoardWidthId) {
+            const widthName = floorBoardWidths.find((w) => w.id === selectedFloorBoardWidthId)?.name
+            return widthName ? `${flooringName} (${widthName})` : flooringName
+        }
+        return flooringName ?? null
+    })()
 
     // Build selection summary
     const selectionSummary = [
@@ -80,6 +97,10 @@ export function Generator({
         {
             category: 'Color',
             value: colorWheelOptions.find((c) => c.id === selectedColorId)?.name ?? null,
+        },
+        {
+            category: 'Flooring',
+            value: flooringDisplayValue,
         },
         {
             category: 'Ratio',
@@ -130,6 +151,21 @@ export function Generator({
     const handleQualitySelect = (qualityId: '1k' | '2k' | '4k') => {
         setSelectedQualityId(qualityId)
         onImageQualitySelect?.(qualityId)
+    }
+
+    const handleFlooringTypeSelect = (flooringTypeId: 'wood' | 'tile' | 'stone' | 'concrete') => {
+        setSelectedFlooringTypeId(flooringTypeId)
+        // Clear floor board width if not wood
+        if (flooringTypeId !== 'wood') {
+            setSelectedFloorBoardWidthId(null)
+            onFloorBoardWidthSelect?.(undefined as any)
+        }
+        onFlooringTypeSelect?.(flooringTypeId)
+    }
+
+    const handleFloorBoardWidthSelect = (widthId: '3in' | '6in' | '9in') => {
+        setSelectedFloorBoardWidthId(widthId)
+        onFloorBoardWidthSelect?.(widthId)
     }
 
     const isGenerating = generationProgress?.isGenerating ?? false
@@ -253,6 +289,34 @@ export function Generator({
                         />
                     ))}
                 </ParameterSection>
+
+                {/* Flooring Type - Single-select, Optional */}
+                <ParameterSection title="Flooring Type" description="Optional - AI will infer from style if not specified">
+                    {flooringTypes.map((flooring) => (
+                        <SelectionCard
+                            key={flooring.id}
+                            label={flooring.name}
+                            isSelected={selectedFlooringTypeId === flooring.id}
+                            onClick={() => handleFlooringTypeSelect(flooring.id as 'wood' | 'tile' | 'stone' | 'concrete')}
+                            disabled={isGenerating}
+                        />
+                    ))}
+                </ParameterSection>
+
+                {/* Floor Board Width - Conditional, only shown when wood is selected */}
+                {selectedFlooringTypeId === 'wood' && (
+                    <ParameterSection title="Floor Board Width" description="Select plank width for hardwood flooring">
+                        {floorBoardWidths.map((width) => (
+                            <SelectionCard
+                                key={width.id}
+                                label={width.name}
+                                isSelected={selectedFloorBoardWidthId === width.id}
+                                onClick={() => handleFloorBoardWidthSelect(width.id as '3in' | '6in' | '9in')}
+                                disabled={isGenerating}
+                            />
+                        ))}
+                    </ParameterSection>
+                )}
 
                 {/* Aspect Ratio - Single-select */}
                 <ParameterSection title="Aspect Ratio" description="Choose the image dimensions">

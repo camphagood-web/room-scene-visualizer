@@ -44,6 +44,16 @@ export interface ImageQualityOption {
     description: string
 }
 
+export interface FlooringType {
+    id: 'wood' | 'tile' | 'stone' | 'concrete'
+    name: string
+}
+
+export interface FloorBoardWidth {
+    id: '3in' | '6in' | '9in'
+    name: string
+}
+
 export interface ProgressSegment {
     roomTypeId: string
     roomTypeName: string
@@ -70,6 +80,8 @@ export interface GeneratorSelections {
     colorWheelId: 'light' | 'medium' | 'dark' | null
     aspectRatioId: '1:1' | '4:3' | '16:9' | null
     imageQualityId: '1k' | '2k' | '4k' | null
+    flooringTypeId: 'wood' | 'tile' | 'stone' | 'concrete' | null
+    floorBoardWidthId: '3in' | '6in' | '9in' | null
 }
 
 // =============================================================================
@@ -91,6 +103,10 @@ export interface GeneratorProps {
     aspectRatios: AspectRatio[]
     /** Image quality options */
     imageQualityOptions: ImageQualityOption[]
+    /** Flooring type options */
+    flooringTypes: FlooringType[]
+    /** Floor board width options (for wood flooring) */
+    floorBoardWidths: FloorBoardWidth[]
     /** Current generation progress (null if not generating) */
     generationProgress: GenerationProgress | null
 
@@ -108,6 +124,10 @@ export interface GeneratorProps {
     onAspectRatioSelect?: (ratioId: '1:1' | '4:3' | '16:9') => void
     /** Called when user selects an image quality */
     onImageQualitySelect?: (qualityId: '1k' | '2k' | '4k') => void
+    /** Called when user selects a flooring type */
+    onFlooringTypeSelect?: (flooringTypeId: 'wood' | 'tile' | 'stone' | 'concrete') => void
+    /** Called when user selects a floor board width */
+    onFloorBoardWidthSelect?: (widthId: '3in' | '6in' | '9in') => void
     /** Called when user clicks the Generate button */
     onGenerate?: () => void
 }

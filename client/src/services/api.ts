@@ -1,6 +1,7 @@
 import type {
     DesignStyle, Architect, Designer,
-    RoomType, ColorWheelOption, AspectRatio, ImageQualityOption
+    RoomType, ColorWheelOption, AspectRatio, ImageQualityOption,
+    FlooringType, FloorBoardWidth
 } from '../features/generator/types';
 
 const API_BASE_URL = 'http://localhost:8000/api';
@@ -10,6 +11,8 @@ export interface GlobalOptions {
     colorWheelOptions: ColorWheelOption[];
     aspectRatios: AspectRatio[];
     imageQualityOptions: ImageQualityOption[];
+    flooringTypes: FlooringType[];
+    floorBoardWidths: FloorBoardWidth[];
 }
 
 export interface GenerateRequest {
@@ -20,6 +23,8 @@ export interface GenerateRequest {
     color_wheel_id: string;
     aspect_ratio_id: string;
     image_quality_id: string;
+    flooring_type_id?: string;
+    floor_board_width_id?: string;
 }
 
 export interface GenerationResult {

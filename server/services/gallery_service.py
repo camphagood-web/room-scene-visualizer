@@ -10,6 +10,8 @@ VALID_IMAGE_QUALITIES = {"1k", "2k", "4k"}
 class GalleryService:
     def __init__(self, data_file: str = GALLERY_DATA_FILE):
         self.data_file = data_file
+        self._cache: Dict | None = None  # In-memory cache
+        self._cache_loaded = False
         self._ensure_data_file()
 
     def _ensure_data_file(self):
@@ -18,16 +20,34 @@ class GalleryService:
                 json.dump({"sessions": []}, f)
 
     def _load_data(self) -> Dict:
+        # Return cached data if available
+        if self._cache_loaded and self._cache is not None:
+            return self._cache
+
+        # Load from file
         try:
             with open(self.data_file, 'r') as f:
                 data = json.load(f)
-            return self._sanitize_data(data)
+            data = self._sanitize_data(data)
         except (json.JSONDecodeError, FileNotFoundError):
-            return {"sessions": []}
+            data = {"sessions": []}
+
+        # Cache the data
+        self._cache = data
+        self._cache_loaded = True
+        return self._cache
 
     def _save_data(self, data: Dict):
         with open(self.data_file, 'w') as f:
             json.dump(data, f, indent=2)
+        # Update cache after writing
+        self._cache = data
+        self._cache_loaded = True
+
+    def _invalidate_cache(self):
+        """Clear the cache, forcing next load to read from disk."""
+        self._cache = None
+        self._cache_loaded = False
 
     def _sanitize_data(self, data: Dict) -> Dict:
         if not isinstance(data, dict):

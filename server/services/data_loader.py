@@ -11,6 +11,28 @@ def to_kebab(s):
         return ""
     return re.sub(r'[^a-z0-9]+', '-', s.lower()).strip('-')
 
+NON_ROOM_COLUMNS = {
+    "Design Style",
+    "Representative Architects",
+    "Representative Interior Designers",
+    "Primary Regions",
+    "Architectural elements for rooms",
+}
+
+def build_room_column_map(room_df):
+    room_columns = {}
+    for col in room_df.columns:
+        if col in NON_ROOM_COLUMNS:
+            continue
+        base = re.sub(r'\s*\(.*\)$', '', str(col)).strip()
+        if not base:
+            continue
+        room_id = to_kebab(base)
+        if not room_id:
+            continue
+        room_columns[room_id] = col
+    return room_columns
+
 # Global cache to hold the processed data AND the raw lookups
 _DATA_CACHE = None
 
@@ -118,6 +140,21 @@ def load_data():
             { "id": "4k", "name": "4K", "description": "Maximum detail" }
         ]
 
+        flooring_types = [
+            { "id": "wood", "name": "Hardwood" },
+            { "id": "tile", "name": "Tile" },
+            { "id": "stone", "name": "Stone" },
+            { "id": "concrete", "name": "Polished Concrete" },
+        ]
+
+        floor_board_widths = [
+            { "id": "3in", "name": "3in" },
+            { "id": "6in", "name": "6in" },
+            { "id": "9in", "name": "9in" },
+        ]
+
+        room_column_map = build_room_column_map(room_df)
+
         # Store in cache structure
         return {
             "frontend_data": {
@@ -127,11 +164,14 @@ def load_data():
                 "roomTypes": room_types,
                 "colorWheelOptions": color_wheel_options,
                 "aspectRatios": aspect_ratios,
-                "imageQualityOptions": image_quality_options
+                "imageQualityOptions": image_quality_options,
+                "flooringTypes": flooring_types,
+                "floorBoardWidths": floor_board_widths
             },
             "raw_data": {
                 "room_df": room_df,
-                "color_df": color_df
+                "color_df": color_df,
+                "room_column_map": room_column_map
             }
         }
 
@@ -145,15 +185,9 @@ def get_data():
         _DATA_CACHE = load_data()
     return _DATA_CACHE["frontend_data"] if _DATA_CACHE else {
         "styles": [], "architects": [], "designers": [],
-        "roomTypes": [], "colorWheelOptions": [], "aspectRatios": [], "imageQualityOptions": []
+        "roomTypes": [], "colorWheelOptions": [], "aspectRatios": [], "imageQualityOptions": [],
+        "flooringTypes": [], "floorBoardWidths": []
     }
-
-ROOM_COLUMN_MAP = {
-    "living-room": "Living Room (2M+)",
-    "dining-room": "Dining Room (2M+)",
-    "kitchen": "Kitchen (2M+)",
-    "bathroom": "Bathroom (2M+)"
-}
 
 def get_room_details(style_id: str, room_type_id: str):
     global _DATA_CACHE
@@ -161,6 +195,10 @@ def get_room_details(style_id: str, room_type_id: str):
     if not _DATA_CACHE: return {}
 
     room_df = _DATA_CACHE["raw_data"]["room_df"]
+    room_column_map = _DATA_CACHE["raw_data"].get("room_column_map")
+    if not room_column_map:
+        room_column_map = build_room_column_map(room_df)
+        _DATA_CACHE["raw_data"]["room_column_map"] = room_column_map
     
     # helper to match style
     # Assuming style_id is kebab case of 'Design Style' column
@@ -179,7 +217,7 @@ def get_room_details(style_id: str, room_type_id: str):
         "room_specifics": ""
     }
     
-    col_name = ROOM_COLUMN_MAP.get(room_type_id)
+    col_name = room_column_map.get(room_type_id)
     if col_name and col_name in row:
         details["room_specifics"] = row[col_name]
         

@@ -26,7 +26,9 @@ def generate_room_image(
     designer_id: str,
     color_wheel_id: str,
     aspect_ratio_id: str,
-    model_id: str = "1k"
+    model_id: str = "1k",
+    flooring_type_id: str = None,
+    floor_board_width_id: str = None
 ):
     # Data Lookup
     all_data = get_data()
@@ -64,9 +66,31 @@ def generate_room_image(
         print(f"Unknown aspect ratio '{aspect_ratio_id}', defaulting to 1:1")
         aspect_ratio = "1:1"
 
+    # Flooring Specification (conditional)
+    flooring_spec = ""
+    if flooring_type_id == "wood" and floor_board_width_id:
+        # Use exact language from width.txt
+        width_map = {
+            "3in": "Flooring (Critical): extra narrow, 3-inch wide planks",
+            "6in": "Flooring (Critical): standard, 6-inch wide planks",
+            "9in": "Flooring (Critical): Wide, 9-inch wide planks"
+        }
+        flooring_spec = width_map.get(floor_board_width_id, "")
+    elif flooring_type_id:
+        flooring_type_names = {
+            "wood": "Hardwood",
+            "tile": "Tile",
+            "stone": "Stone",
+            "concrete": "Polished Concrete"
+        }
+        flooring_name = flooring_type_names.get(flooring_type_id, flooring_type_id.title())
+        flooring_spec = f"Flooring Specification: {flooring_name} flooring"
+
     # Prompt Construction
+    flooring_section = f"\n{flooring_spec}\n" if flooring_spec else ""
+
     prompt = f"""Generate a photorealistic {room_name} interior.
-    
+
 Design Style: {style_name}
 Mood: {mood}
 Designer Note: {note}
@@ -76,7 +100,7 @@ Architectural Context:
 
 Room Features:
 {room_specifics}
-
+{flooring_section}
 Color Palette ({clean_name(color_wheel_id)} Scheme):
 {color_details}
 

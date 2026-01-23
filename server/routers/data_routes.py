@@ -11,7 +11,9 @@ def get_global_options():
         "roomTypes": data.get("roomTypes", []),
         "colorWheelOptions": data.get("colorWheelOptions", []),
         "aspectRatios": data.get("aspectRatios", []),
-        "imageQualityOptions": data.get("imageQualityOptions", [])
+        "imageQualityOptions": data.get("imageQualityOptions", []),
+        "flooringTypes": data.get("flooringTypes", []),
+        "floorBoardWidths": data.get("floorBoardWidths", [])
     }
 
 @router.get("/styles")

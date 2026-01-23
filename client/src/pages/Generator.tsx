@@ -11,6 +11,8 @@ export default function Generator() {
         colorWheelOptions,
         aspectRatios,
         imageQualityOptions,
+        flooringTypes,
+        floorBoardWidths,
         isLoading,
         error,
         generationProgress,
@@ -59,7 +61,9 @@ export default function Generator() {
         designerId: '',
         colorWheelId: '',
         aspectRatioId: '',
-        imageQualityId: ''
+        imageQualityId: '',
+        flooringTypeId: '' as string | undefined,
+        floorBoardWidthId: '' as string | undefined
     });
 
     const handleGenerate = () => {
@@ -73,7 +77,9 @@ export default function Generator() {
             s.designerId,
             s.colorWheelId,
             s.aspectRatioId,
-            s.imageQualityId
+            s.imageQualityId,
+            s.flooringTypeId || undefined,
+            s.floorBoardWidthId || undefined
         );
     };
 
@@ -94,6 +100,8 @@ export default function Generator() {
             colorWheelOptions={colorWheelOptions}
             aspectRatios={aspectRatios}
             imageQualityOptions={imageQualityOptions}
+            flooringTypes={flooringTypes}
+            floorBoardWidths={floorBoardWidths}
             generationProgress={generationProgress}
 
             // Wire up callbacks to store state
@@ -109,6 +117,14 @@ export default function Generator() {
             onColorWheelSelect={(id) => selections.current.colorWheelId = id}
             onAspectRatioSelect={(id) => selections.current.aspectRatioId = id}
             onImageQualitySelect={(id) => selections.current.imageQualityId = id}
+            onFlooringTypeSelect={(id) => {
+                selections.current.flooringTypeId = id;
+                // Clear floor board width if not wood
+                if (id !== 'wood') {
+                    selections.current.floorBoardWidthId = undefined;
+                }
+            }}
+            onFloorBoardWidthSelect={(id) => selections.current.floorBoardWidthId = id}
 
             onGenerate={handleGenerate}
         />

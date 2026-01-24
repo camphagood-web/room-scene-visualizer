@@ -8,7 +8,7 @@ import type {
 } from '../types'
 import JSZip from 'jszip'
 import { saveAs } from 'file-saver'
-import { api } from '../../../services/api'
+import { api, API_BASE_URL, resolveImageUrl } from '../../../services/api'
 
 // Mock options for filters - typically these would come from the API too
 const FILTER_OPTIONS: FilterOptions = {
@@ -48,10 +48,21 @@ export function useGallery() {
         }
 
         try {
-            const response = await fetch('http://localhost:8000/api/gallery/sessions')
+            const response = await fetch(`${API_BASE_URL}/gallery/sessions`)
             if (!response.ok) throw new Error('Failed to fetch sessions')
             const data = await response.json()
-            setSessions(data)
+            const normalizedSessions = Array.isArray(data)
+                ? data.map((session) => ({
+                    ...session,
+                    images: Array.isArray(session.images)
+                        ? session.images.map((image) => ({
+                            ...image,
+                            url: resolveImageUrl(image.url),
+                        }))
+                        : [],
+                }))
+                : []
+            setSessions(normalizedSessions)
         } catch (error) {
             console.error('Error fetching gallery sessions:', error)
         } finally {

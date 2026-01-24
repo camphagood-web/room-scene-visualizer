@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routers import data_routes, generate_routes, gallery_routes
+from routers import data_routes, generate_routes, gallery_routes, image_routes
 import uvicorn
 import os
 
@@ -24,6 +24,7 @@ app.add_middleware(
 app.include_router(data_routes.router, prefix="/api")
 app.include_router(generate_routes.router, prefix="/api")
 app.include_router(gallery_routes.router, prefix="/api")
+app.include_router(image_routes.router, prefix="/api")
 
 @app.get("/")
 def read_root():

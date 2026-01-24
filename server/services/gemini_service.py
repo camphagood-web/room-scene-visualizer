@@ -154,17 +154,16 @@ High quality, detailed, architectural photography, 8k resolution."""
             if response.candidates:
                 for part in response.candidates[0].content.parts:
                     if part.inline_data:
-                        # Convert raw bytes to base64 data URL for frontend
                         import base64
-                        b64_data = base64.b64encode(part.inline_data.data).decode('utf-8')
+                        b64_data = base64.b64encode(part.inline_data.data).decode("utf-8")
                         mime = part.inline_data.mime_type or "image/jpeg"
-                        data_url = f"data:{mime};base64,{b64_data}"
-                        
+
                         return {
                             "success": True,
-                            "data": data_url,
+                            "base64_data": b64_data,
+                            "mime_type": mime,
                             "model_used": target_model,
-                            "prompt": prompt
+                            "prompt": prompt,
                         }
                         
             print("No inline image data found in response.")

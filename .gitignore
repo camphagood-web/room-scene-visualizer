@@ -34,6 +34,10 @@ env/
 **/.env
 server/.env
 
+# App data
+server/images/
+server/backups/
+
 # Node
 node_modules/
 npm-debug.log*

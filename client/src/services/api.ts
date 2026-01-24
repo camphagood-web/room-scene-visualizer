@@ -4,7 +4,20 @@ import type {
     FlooringType, FloorBoardWidth
 } from '../features/generator/types';
 
-const API_BASE_URL = 'http://localhost:8000/api';
+export const API_BASE_URL =
+    import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api';
+const API_ORIGIN = API_BASE_URL.replace(/\/api\/?$/, '');
+
+export const resolveImageUrl = (url: string): string => {
+    if (!url) return url;
+    if (url.startsWith('data:') || url.startsWith('http://') || url.startsWith('https://')) {
+        return url;
+    }
+    if (url.startsWith('/')) {
+        return `${API_ORIGIN}${url}`;
+    }
+    return url;
+};
 
 export interface GlobalOptions {
     roomTypes: RoomType[];

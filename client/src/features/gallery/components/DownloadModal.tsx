@@ -4,6 +4,8 @@ interface DownloadModalProps {
     isOpen: boolean
     defaultFileName: string
     selectedCount: number
+    isDownloading?: boolean
+    error?: string | null
     onConfirm?: (fileName: string) => void
     onCancel?: () => void
 }
@@ -12,6 +14,8 @@ export function DownloadModal({
     isOpen,
     defaultFileName,
     selectedCount,
+    isDownloading = false,
+    error = null,
     onConfirm,
     onCancel,
 }: DownloadModalProps) {
@@ -26,7 +30,7 @@ export function DownloadModal({
 
     // Handle keyboard
     useEffect(() => {
-        if (!isOpen) return
+        if (!isOpen || isDownloading) return
 
         const handleKeyDown = (e: KeyboardEvent) => {
             if (e.key === 'Escape') {
@@ -38,7 +42,7 @@ export function DownloadModal({
 
         window.addEventListener('keydown', handleKeyDown)
         return () => window.removeEventListener('keydown', handleKeyDown)
-    }, [isOpen, fileName, onConfirm, onCancel])
+    }, [isOpen, isDownloading, fileName, onConfirm, onCancel])
 
     // Prevent body scroll when open
     useEffect(() => {
@@ -59,7 +63,7 @@ export function DownloadModal({
             {/* Backdrop */}
             <div
                 className="absolute inset-0 bg-black/50 backdrop-blur-sm"
-                onClick={onCancel}
+                onClick={isDownloading ? undefined : onCancel}
             />
 
             {/* Modal */}
@@ -108,27 +112,61 @@ export function DownloadModal({
                         onChange={(e) => setFileName(e.target.value)}
                         placeholder="Enter folder name..."
                         autoFocus
-                        className="w-full px-4 py-3 rounded-lg border border-stone-300 dark:border-stone-700 bg-white dark:bg-stone-800 text-stone-900 dark:text-stone-100 placeholder-stone-400 dark:placeholder-stone-500 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-shadow"
+                        disabled={isDownloading}
+                        className="w-full px-4 py-3 rounded-lg border border-stone-300 dark:border-stone-700 bg-white dark:bg-stone-800 text-stone-900 dark:text-stone-100 placeholder-stone-400 dark:placeholder-stone-500 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-shadow disabled:opacity-50 disabled:cursor-not-allowed"
                     />
                     <p className="mt-2 text-xs text-stone-500 dark:text-stone-400">
                         Your images will be downloaded as <span className="font-medium">{fileName || 'images'}.zip</span>
                     </p>
+
+                    {/* Error message */}
+                    {error && (
+                        <div className="mt-3 p-3 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
+                            <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
+                        </div>
+                    )}
                 </div>
 
                 {/* Footer */}
                 <div className="px-6 py-4 bg-stone-50 dark:bg-stone-800/50 flex items-center justify-end gap-3">
                     <button
                         onClick={onCancel}
-                        className="px-4 py-2 text-sm font-medium text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 transition-colors"
+                        disabled={isDownloading}
+                        className="px-4 py-2 text-sm font-medium text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         Cancel
                     </button>
                     <button
                         onClick={() => onConfirm?.(fileName.trim())}
-                        disabled={!fileName.trim()}
-                        className="px-5 py-2 text-sm font-medium text-white bg-amber-500 hover:bg-amber-600 disabled:bg-stone-300 dark:disabled:bg-stone-700 disabled:cursor-not-allowed rounded-lg transition-colors"
+                        disabled={!fileName.trim() || isDownloading}
+                        className="px-5 py-2 text-sm font-medium text-white bg-amber-500 hover:bg-amber-600 disabled:bg-stone-300 dark:disabled:bg-stone-700 disabled:cursor-not-allowed rounded-lg transition-colors flex items-center gap-2"
                     >
-                        Download
+                        {isDownloading ? (
+                            <>
+                                <svg
+                                    className="w-4 h-4 animate-spin"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <circle
+                                        className="opacity-25"
+                                        cx="12"
+                                        cy="12"
+                                        r="10"
+                                        stroke="currentColor"
+                                        strokeWidth="4"
+                                    />
+                                    <path
+                                        className="opacity-75"
+                                        fill="currentColor"
+                                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                    />
+                                </svg>
+                                Downloading...
+                            </>
+                        ) : (
+                            'Download'
+                        )}
                     </button>
                 </div>
             </div>

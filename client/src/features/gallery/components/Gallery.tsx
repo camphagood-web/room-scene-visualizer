@@ -244,6 +244,8 @@ export function Gallery({
                 isOpen={downloadModal.isOpen}
                 defaultFileName={defaultFileName}
                 selectedCount={selectedImages.length}
+                isDownloading={downloadModal.isDownloading}
+                error={downloadModal.error}
                 onConfirm={onDownloadConfirm}
                 onCancel={onDownloadCancel}
             />

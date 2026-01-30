@@ -37,6 +37,8 @@ export function useGallery() {
     const [downloadModal, setDownloadModal] = useState<DownloadModalState>({
         isOpen: false,
         zipFileName: '',
+        isDownloading: false,
+        error: null,
     })
     const [filterOptions, setFilterOptions] = useState<FilterOptions>(FILTER_OPTIONS)
     const [isLoading, setIsLoading] = useState(true)
@@ -176,6 +178,8 @@ export function useGallery() {
         setDownloadModal({
             isOpen: true,
             zipFileName: '',
+            isDownloading: false,
+            error: null,
         })
     }
 
@@ -183,25 +187,59 @@ export function useGallery() {
         const session = sessions.find(s => s.id === sessionId)
         if (session) {
             // Select all images in session implicitly for download
-            // Or just download directly? 
+            // Or just download directly?
             // Flow says "Download an entire session", usually implies direct action or modal.
-            // Let's use modal but pre-set context? 
+            // Let's use modal but pre-set context?
             // For simplicity, let's select the session images and open modal
             handleSessionSelect(sessionId, true)
             setDownloadModal({
                 isOpen: true,
-                zipFileName: `session-${sessionId.slice(0, 8)}`
+                zipFileName: `session-${sessionId.slice(0, 8)}`,
+                isDownloading: false,
+                error: null,
             })
         }
     }
 
     const handleDownloadCancel = () => {
-        setDownloadModal(prev => ({ ...prev, isOpen: false }))
+        // Only allow cancel when not downloading
+        if (!downloadModal.isDownloading) {
+            setDownloadModal(prev => ({ ...prev, isOpen: false, error: null }))
+        }
+    }
+
+    const dataUrlToBlob = (dataUrl: string): Blob => {
+        const [meta, data] = dataUrl.split(',')
+        const mimeMatch = meta?.match(/data:(.*?)(;base64)?$/)
+        const mimeType = mimeMatch?.[1] || 'application/octet-stream'
+        const isBase64 = meta?.includes(';base64')
+
+        if (!isBase64) {
+            return new Blob([decodeURIComponent(data || '')], { type: mimeType })
+        }
+
+        const byteString = atob(data || '')
+        const bytes = new Uint8Array(byteString.length)
+        for (let i = 0; i < byteString.length; i += 1) {
+            bytes[i] = byteString.charCodeAt(i)
+        }
+        return new Blob([bytes], { type: mimeType })
+    }
+
+    const getImageBlob = async (url: string): Promise<Blob> => {
+        if (url.startsWith('data:')) {
+            return dataUrlToBlob(url)
+        }
+        const response = await fetch(url)
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`)
+        }
+        return response.blob()
     }
 
     const handleDownloadConfirm = async (fileName: string) => {
-        const zip = new JSZip()
-        const folder = zip.folder(fileName)
+        // Set downloading state
+        setDownloadModal(prev => ({ ...prev, isDownloading: true, error: null }))
 
         // Collect selected images
         const imagesToDownload: { url: string; name: string }[] = []
@@ -216,37 +254,65 @@ export function useGallery() {
             })
         })
 
-        // Fetch and add to zip
-        // Note: If URLs are base64, we handle differently. Assuming URLs are http/relative.
-        // If they are base64 data URIs from Gemini service (likely they are URLs or base64), need to check.
-        // The previous code in generate_routes stored `result`.
-        // If `result` is a URL (likely from gemini service returning a path or temp url), we fetch it.
-        // If it's base64, we strip header. 
+        // Guard against empty selection
+        if (imagesToDownload.length === 0) {
+            setDownloadModal(prev => ({ ...prev, isDownloading: false, error: 'No images selected.' }))
+            return
+        }
 
-        // Assuming URL for now. If Base64, fetch handles data urls too mostly or we parse.
+        console.log('Downloading images:', imagesToDownload.map(img => img.url))
 
         try {
-            await Promise.all(imagesToDownload.map(async (img) => {
-                // Check if base64
-                if (img.url.startsWith('data:image')) {
-                    const data = img.url.split(',')[1]
-                    folder?.file(img.name, data, { base64: true })
-                } else {
-                    const response = await fetch(img.url)
-                    const blob = await response.blob()
+            const zip = new JSZip()
+            const folder = zip.folder(fileName)
+
+            // Use Promise.allSettled to handle partial failures gracefully
+            const results = await Promise.allSettled(
+                imagesToDownload.map(async (img) => {
+                    const blob = await getImageBlob(img.url)
                     folder?.file(img.name, blob)
+                    return { name: img.name, success: true }
+                })
+            )
+
+            // Check for failures
+            const failures = results.filter(r => r.status === 'rejected') as PromiseRejectedResult[]
+            const successes = results.filter(r => r.status === 'fulfilled') as PromiseFulfilledResult<{ name: string; success: boolean }>[]
+
+            if (failures.length === imagesToDownload.length) {
+                // All failed - show the first error reason
+                const firstError = failures[0]?.reason
+                const errorMsg = firstError instanceof Error ? firstError.message : 'Unknown error'
+                console.error('All downloads failed. First error:', firstError)
+                throw new Error(`Download failed: ${errorMsg}`)
+            }
+
+            if (successes.length > 0) {
+                // Generate and save zip with successful downloads
+                const content = await zip.generateAsync({ type: 'blob' })
+                saveAs(content, `${fileName}.zip`)
+
+                // Close modal and clear selection
+                setDownloadModal(prev => ({ ...prev, isOpen: false, isDownloading: false, error: null }))
+                handleClearSelection()
+
+                // Log partial failures if any
+                if (failures.length > 0) {
+                    console.warn(`${failures.length} image(s) failed to download`)
                 }
-            }))
-
-            const content = await zip.generateAsync({ type: 'blob' })
-            saveAs(content, `${fileName}.zip`)
-
-            setDownloadModal(prev => ({ ...prev, isOpen: false }))
-            handleClearSelection()
-
+            }
         } catch (error) {
-            console.error("Download failed", error)
-            // Ideally show toast
+            console.error("Download failed:", error)
+            let errorMessage = 'Download failed. Please try again.'
+            if (error instanceof Error) {
+                // Check for common error types
+                if (error.message.includes('Failed to fetch') || error.name === 'TypeError') {
+                    errorMessage = 'Network error: Could not connect to server. Please check your connection.'
+                } else {
+                    errorMessage = error.message
+                }
+            }
+            setDownloadModal(prev => ({ ...prev, isDownloading: false, error: errorMessage }))
         }
     }
 

@@ -1,6 +1,576 @@
 {
   "sessions": [
     {
+      "id": "751496ff-1227-4e1b-b7a0-bcb567904845",
+      "createdAt": "2026-01-29T04:11:45.917830Z",
+      "designStyle": {
+        "id": "modern-mountain-retreat",
+        "name": "Modern Mountain Retreat"
+      },
+      "architect": {
+        "id": "clb-architects",
+        "name": "Clb Architects"
+      },
+      "designer": {
+        "id": "commune-design",
+        "name": "Commune Design"
+      },
+      "colorWheel": "medium",
+      "aspectRatio": "16:9",
+      "imageQuality": "4K",
+      "images": [
+        {
+          "id": "6b9caaf9-9b9b-4e91-8f0c-836cef0ab3be",
+          "roomType": {
+            "id": "bedroom",
+            "name": "Bedroom"
+          },
+          "url": "/api/images/sessions/751496ff-1227-4e1b-b7a0-bcb567904845/bedroom-6b9caaf9.jpg",
+          "selected": false
+        }
+      ]
+    },
+    {
+      "id": "d6153eee-c8bb-405b-9c3b-6720aed78997",
+      "createdAt": "2026-01-29T04:11:00.091466Z",
+      "designStyle": {
+        "id": "modern-mountain-retreat",
+        "name": "Modern Mountain Retreat"
+      },
+      "architect": {
+        "id": "clb-architects",
+        "name": "Clb Architects"
+      },
+      "designer": {
+        "id": "commune-design",
+        "name": "Commune Design"
+      },
+      "colorWheel": "medium",
+      "aspectRatio": "16:9",
+      "imageQuality": "4K",
+      "images": [
+        {
+          "id": "f83e32e4-b7e9-4f64-bda3-3ac1044080d0",
+          "roomType": {
+            "id": "bathroom",
+            "name": "Bathroom"
+          },
+          "url": "/api/images/sessions/d6153eee-c8bb-405b-9c3b-6720aed78997/bathroom-f83e32e4.jpg",
+          "selected": false
+        }
+      ]
+    },
+    {
+      "id": "4ea1ee35-fbe4-4111-9f7f-c72731e081f2",
+      "createdAt": "2026-01-29T04:10:23.708971Z",
+      "designStyle": {
+        "id": "modern-mountain-retreat",
+        "name": "Modern Mountain Retreat"
+      },
+      "architect": {
+        "id": "clb-architects",
+        "name": "Clb Architects"
+      },
+      "designer": {
+        "id": "commune-design",
+        "name": "Commune Design"
+      },
+      "colorWheel": "medium",
+      "aspectRatio": "16:9",
+      "imageQuality": "4K",
+      "images": [
+        {
+          "id": "f1950468-5919-41b1-8719-07dfb6fe43e4",
+          "roomType": {
+            "id": "kitchen",
+            "name": "Kitchen"
+          },
+          "url": "/api/images/sessions/4ea1ee35-fbe4-4111-9f7f-c72731e081f2/kitchen-f1950468.jpg",
+          "selected": false
+        }
+      ]
+    },
+    {
+      "id": "76b8f5bf-be33-4ce0-bae2-0372209f9134",
+      "createdAt": "2026-01-29T04:09:41.717196Z",
+      "designStyle": {
+        "id": "modern-mountain-retreat",
+        "name": "Modern Mountain Retreat"
+      },
+      "architect": {
+        "id": "clb-architects",
+        "name": "Clb Architects"
+      },
+      "designer": {
+        "id": "commune-design",
+        "name": "Commune Design"
+      },
+      "colorWheel": "medium",
+      "aspectRatio": "16:9",
+      "imageQuality": "4K",
+      "images": [
+        {
+          "id": "a7cd417a-8aac-4e77-aaac-c47e0f4eea68",
+          "roomType": {
+            "id": "dining-room",
+            "name": "Dining Room"
+          },
+          "url": "/api/images/sessions/76b8f5bf-be33-4ce0-bae2-0372209f9134/dining-room-a7cd417a.jpg",
+          "selected": false
+        }
+      ]
+    },
+    {
+      "id": "70f83bcb-9bd0-4c45-93a0-f63ca13abdc0",
+      "createdAt": "2026-01-29T04:08:58.086438Z",
+      "designStyle": {
+        "id": "modern-mountain-retreat",
+        "name": "Modern Mountain Retreat"
+      },
+      "architect": {
+        "id": "clb-architects",
+        "name": "Clb Architects"
+      },
+      "designer": {
+        "id": "commune-design",
+        "name": "Commune Design"
+      },
+      "colorWheel": "medium",
+      "aspectRatio": "16:9",
+      "imageQuality": "4K",
+      "images": [
+        {
+          "id": "617f26fa-82b3-4ed1-af9b-b2fcca337eda",
+          "roomType": {
+            "id": "living-room",
+            "name": "Living Room"
+          },
+          "url": "/api/images/sessions/70f83bcb-9bd0-4c45-93a0-f63ca13abdc0/living-room-617f26fa.jpg",
+          "selected": false
+        }
+      ]
+    },
+    {
+      "id": "03e7474a-42ae-42e1-bf92-5519e459ecc8",
+      "createdAt": "2026-01-29T04:01:38.690735Z",
+      "designStyle": {
+        "id": "lowcountry-cottage-elegance",
+        "name": "Lowcountry Cottage Elegance"
+      },
+      "architect": {
+        "id": "historical-concepts",
+        "name": "Historical Concepts"
+      },
+      "designer": {
+        "id": "summerour-interiors",
+        "name": "Summerour Interiors"
+      },
+      "colorWheel": "medium",
+      "aspectRatio": "16:9",
+      "imageQuality": "4K",
+      "images": [
+        {
+          "id": "2225808b-f69d-4a5f-b684-f5c9992f42d7",
+          "roomType": {
+            "id": "bedroom",
+            "name": "Bedroom"
+          },
+          "url": "/api/images/sessions/03e7474a-42ae-42e1-bf92-5519e459ecc8/bedroom-2225808b.jpg",
+          "selected": false
+        }
+      ]
+    },
+    {
+      "id": "b11cc040-0f10-4d47-860b-1ab397d1b572",
+      "createdAt": "2026-01-29T04:01:01.784690Z",
+      "designStyle": {
+        "id": "lowcountry-cottage-elegance",
+        "name": "Lowcountry Cottage Elegance"
+      },
+      "architect": {
+        "id": "historical-concepts",
+        "name": "Historical Concepts"
+      },
+      "designer": {
+        "id": "summerour-interiors",
+        "name": "Summerour Interiors"
+      },
+      "colorWheel": "medium",
+      "aspectRatio": "16:9",
+      "imageQuality": "4K",
+      "images": [
+        {
+          "id": "290fe72d-e613-498a-80ea-f343618a37a7",
+          "roomType": {
+            "id": "bathroom",
+            "name": "Bathroom"
+          },
+          "url": "/api/images/sessions/b11cc040-0f10-4d47-860b-1ab397d1b572/bathroom-290fe72d.jpg",
+          "selected": false
+        }
+      ]
+    },
+    {
+      "id": "8a15a325-e7cc-4dcc-b73e-fb00ddf6e0c0",
+      "createdAt": "2026-01-29T04:00:28.334604Z",
+      "designStyle": {
+        "id": "lowcountry-cottage-elegance",
+        "name": "Lowcountry Cottage Elegance"
+      },
+      "architect": {
+        "id": "historical-concepts",
+        "name": "Historical Concepts"
+      },
+      "designer": {
+        "id": "summerour-interiors",
+        "name": "Summerour Interiors"
+      },
+      "colorWheel": "medium",
+      "aspectRatio": "16:9",
+      "imageQuality": "4K",
+      "images": [
+        {
+          "id": "357aca5e-128b-411b-a424-82b8fef1657c",
+          "roomType": {
+            "id": "kitchen",
+            "name": "Kitchen"
+          },
+          "url": "/api/images/sessions/8a15a325-e7cc-4dcc-b73e-fb00ddf6e0c0/kitchen-357aca5e.jpg",
+          "selected": false
+        }
+      ]
+    },
+    {
+      "id": "66bbeb0b-cbeb-43f2-bb50-c3662136352e",
+      "createdAt": "2026-01-29T03:59:43.548271Z",
+      "designStyle": {
+        "id": "lowcountry-cottage-elegance",
+        "name": "Lowcountry Cottage Elegance"
+      },
+      "architect": {
+        "id": "historical-concepts",
+        "name": "Historical Concepts"
+      },
+      "designer": {
+        "id": "summerour-interiors",
+        "name": "Summerour Interiors"
+      },
+      "colorWheel": "medium",
+      "aspectRatio": "16:9",
+      "imageQuality": "4K",
+      "images": [
+        {
+          "id": "76b62910-7b2f-4061-a2d4-0242be3007f7",
+          "roomType": {
+            "id": "dining-room",
+            "name": "Dining Room"
+          },
+          "url": "/api/images/sessions/66bbeb0b-cbeb-43f2-bb50-c3662136352e/dining-room-76b62910.jpg",
+          "selected": false
+        }
+      ]
+    },
+    {
+      "id": "0c46696f-de6f-4d88-871e-1c0baa2802fb",
+      "createdAt": "2026-01-29T03:59:11.964117Z",
+      "designStyle": {
+        "id": "lowcountry-cottage-elegance",
+        "name": "Lowcountry Cottage Elegance"
+      },
+      "architect": {
+        "id": "historical-concepts",
+        "name": "Historical Concepts"
+      },
+      "designer": {
+        "id": "summerour-interiors",
+        "name": "Summerour Interiors"
+      },
+      "colorWheel": "medium",
+      "aspectRatio": "16:9",
+      "imageQuality": "4K",
+      "images": [
+        {
+          "id": "95190d96-5c03-496a-b3ac-8e3b45ca6857",
+          "roomType": {
+            "id": "living-room",
+            "name": "Living Room"
+          },
+          "url": "/api/images/sessions/0c46696f-de6f-4d88-871e-1c0baa2802fb/living-room-95190d96.jpg",
+          "selected": false
+        }
+      ]
+    },
+    {
+      "id": "c594c790-17fc-4522-9511-33e6775262b2",
+      "createdAt": "2026-01-29T03:52:12.635688Z",
+      "designStyle": {
+        "id": "southern-french-eclectic",
+        "name": "Southern French Eclectic"
+      },
+      "architect": {
+        "id": "bobby-mcalpine",
+        "name": "Bobby Mcalpine"
+      },
+      "designer": {
+        "id": "gerrie-bremermann",
+        "name": "Gerrie Bremermann"
+      },
+      "colorWheel": "medium",
+      "aspectRatio": "16:9",
+      "imageQuality": "4K",
+      "images": [
+        {
+          "id": "0f2f3455-4d29-4499-b0ed-8f2f351e09cb",
+          "roomType": {
+            "id": "bathroom",
+            "name": "Bathroom"
+          },
+          "url": "/api/images/sessions/c594c790-17fc-4522-9511-33e6775262b2/bathroom-0f2f3455.jpg",
+          "selected": false
+        }
+      ]
+    },
+    {
+      "id": "3a9e819a-a9fb-4a7d-b869-beed54eb08be",
+      "createdAt": "2026-01-29T03:50:53.283721Z",
+      "designStyle": {
+        "id": "southern-french-eclectic",
+        "name": "Southern French Eclectic"
+      },
+      "architect": {
+        "id": "bobby-mcalpine",
+        "name": "Bobby Mcalpine"
+      },
+      "designer": {
+        "id": "gerrie-bremermann",
+        "name": "Gerrie Bremermann"
+      },
+      "colorWheel": "medium",
+      "aspectRatio": "16:9",
+      "imageQuality": "4K",
+      "images": [
+        {
+          "id": "5748f574-b0e8-4a1c-acca-636679d6667a",
+          "roomType": {
+            "id": "bathroom",
+            "name": "Bathroom"
+          },
+          "url": "/api/images/sessions/3a9e819a-a9fb-4a7d-b869-beed54eb08be/bathroom-5748f574.jpg",
+          "selected": false
+        }
+      ]
+    },
+    {
+      "id": "76d9cb58-5ecd-43b1-8090-b6f74d6e4ccc",
+      "createdAt": "2026-01-29T03:48:47.332171Z",
+      "designStyle": {
+        "id": "southern-french-eclectic",
+        "name": "Southern French Eclectic"
+      },
+      "architect": {
+        "id": "bobby-mcalpine",
+        "name": "Bobby Mcalpine"
+      },
+      "designer": {
+        "id": "gerrie-bremermann",
+        "name": "Gerrie Bremermann"
+      },
+      "colorWheel": "medium",
+      "aspectRatio": "16:9",
+      "imageQuality": "4K",
+      "images": [
+        {
+          "id": "505fa97c-667b-4b6e-91b7-8b74fa895edd",
+          "roomType": {
+            "id": "bathroom",
+            "name": "Bathroom"
+          },
+          "url": "/api/images/sessions/76d9cb58-5ecd-43b1-8090-b6f74d6e4ccc/bathroom-505fa97c.jpg",
+          "selected": false
+        }
+      ]
+    },
+    {
+      "id": "2fa701b8-b1c9-4504-a137-bff0b937ba2a",
+      "createdAt": "2026-01-29T03:46:48.908102Z",
+      "designStyle": {
+        "id": "southern-french-eclectic",
+        "name": "Southern French Eclectic"
+      },
+      "architect": {
+        "id": "bobby-mcalpine",
+        "name": "Bobby Mcalpine"
+      },
+      "designer": {
+        "id": "gerrie-bremermann",
+        "name": "Gerrie Bremermann"
+      },
+      "colorWheel": "medium",
+      "aspectRatio": "16:9",
+      "imageQuality": "4K",
+      "images": [
+        {
+          "id": "ae15b86d-5efd-4e53-9ac1-f710b2ffc31f",
+          "roomType": {
+            "id": "bedroom",
+            "name": "Bedroom"
+          },
+          "url": "/api/images/sessions/2fa701b8-b1c9-4504-a137-bff0b937ba2a/bedroom-ae15b86d.jpg",
+          "selected": false
+        }
+      ]
+    },
+    {
+      "id": "c1b5d76a-0093-4996-aebc-02c86dec6944",
+      "createdAt": "2026-01-29T03:46:07.413075Z",
+      "designStyle": {
+        "id": "southern-french-eclectic",
+        "name": "Southern French Eclectic"
+      },
+      "architect": {
+        "id": "bobby-mcalpine",
+        "name": "Bobby Mcalpine"
+      },
+      "designer": {
+        "id": "gerrie-bremermann",
+        "name": "Gerrie Bremermann"
+      },
+      "colorWheel": "medium",
+      "aspectRatio": "16:9",
+      "imageQuality": "4K",
+      "images": [
+        {
+          "id": "ec73b76a-4c49-4e41-b963-5f4cebd99e4b",
+          "roomType": {
+            "id": "bathroom",
+            "name": "Bathroom"
+          },
+          "url": "/api/images/sessions/c1b5d76a-0093-4996-aebc-02c86dec6944/bathroom-ec73b76a.jpg",
+          "selected": false
+        }
+      ]
+    },
+    {
+      "id": "38280394-3a95-4e9e-b6ca-66c239436cbc",
+      "createdAt": "2026-01-29T03:45:24.829874Z",
+      "designStyle": {
+        "id": "southern-french-eclectic",
+        "name": "Southern French Eclectic"
+      },
+      "architect": {
+        "id": "bobby-mcalpine",
+        "name": "Bobby Mcalpine"
+      },
+      "designer": {
+        "id": "gerrie-bremermann",
+        "name": "Gerrie Bremermann"
+      },
+      "colorWheel": "medium",
+      "aspectRatio": "16:9",
+      "imageQuality": "4K",
+      "images": [
+        {
+          "id": "6e3fb5b8-8075-4d17-8a41-9bf430091ea0",
+          "roomType": {
+            "id": "kitchen",
+            "name": "Kitchen"
+          },
+          "url": "/api/images/sessions/38280394-3a95-4e9e-b6ca-66c239436cbc/kitchen-6e3fb5b8.jpg",
+          "selected": false
+        }
+      ]
+    },
+    {
+      "id": "d029f643-4ecf-4af1-89b3-b4631f4e52eb",
+      "createdAt": "2026-01-29T03:44:50.897815Z",
+      "designStyle": {
+        "id": "southern-french-eclectic",
+        "name": "Southern French Eclectic"
+      },
+      "architect": {
+        "id": "bobby-mcalpine",
+        "name": "Bobby Mcalpine"
+      },
+      "designer": {
+        "id": "gerrie-bremermann",
+        "name": "Gerrie Bremermann"
+      },
+      "colorWheel": "medium",
+      "aspectRatio": "16:9",
+      "imageQuality": "4K",
+      "images": [
+        {
+          "id": "984e5092-0cbb-4575-baf4-033f163ac2fd",
+          "roomType": {
+            "id": "dining-room",
+            "name": "Dining Room"
+          },
+          "url": "/api/images/sessions/d029f643-4ecf-4af1-89b3-b4631f4e52eb/dining-room-984e5092.jpg",
+          "selected": false
+        }
+      ]
+    },
+    {
+      "id": "5493c70f-c920-4355-8a23-6deb72bce96c",
+      "createdAt": "2026-01-29T03:44:06.248973Z",
+      "designStyle": {
+        "id": "southern-french-eclectic",
+        "name": "Southern French Eclectic"
+      },
+      "architect": {
+        "id": "bobby-mcalpine",
+        "name": "Bobby Mcalpine"
+      },
+      "designer": {
+        "id": "gerrie-bremermann",
+        "name": "Gerrie Bremermann"
+      },
+      "colorWheel": "medium",
+      "aspectRatio": "16:9",
+      "imageQuality": "4K",
+      "images": [
+        {
+          "id": "43d07696-20f8-4187-847c-8454498075b9",
+          "roomType": {
+            "id": "living-room",
+            "name": "Living Room"
+          },
+          "url": "/api/images/sessions/5493c70f-c920-4355-8a23-6deb72bce96c/living-room-43d07696.jpg",
+          "selected": false
+        }
+      ]
+    },
+    {
+      "id": "1f8119bd-6603-4547-9272-52b518646afb",
+      "createdAt": "2026-01-23T23:40:50.415936Z",
+      "designStyle": {
+        "id": "palm-beach-regency",
+        "name": "Palm Beach Regency"
+      },
+      "architect": {
+        "id": "addison-mizner",
+        "name": "Addison Mizner"
+      },
+      "designer": {
+        "id": "mario-buatta",
+        "name": "Mario Buatta"
+      },
+      "colorWheel": "medium",
+      "aspectRatio": "4:3",
+      "imageQuality": "2K",
+      "images": [
+        {
+          "id": "3c2cb3a2-47f0-4136-b562-d1d00c027a31",
+          "roomType": {
+            "id": "kitchen",
+            "name": "Kitchen"
+          },
+          "url": "/api/images/sessions/1f8119bd-6603-4547-9272-52b518646afb/kitchen-3c2cb3a2.jpg",
+          "selected": false
+        }
+      ]
+    },
+    {
       "id": "0416b55f-f207-452a-9bd5-c9c3c1271c91",
       "createdAt": "2026-01-23T23:24:24.994468Z",
       "designStyle": {
@@ -991,31 +1561,31 @@
       ]
     },
     {
-      "id": "1f8119bd-6603-4547-9272-52b518646afb",
-      "createdAt": "2026-01-23T23:40:50.415936Z",
+      "id": "42365c93-d078-4eb5-abf8-641d40790252",
+      "createdAt": "2026-01-29T04:13:42.696805Z",
       "designStyle": {
-        "id": "palm-beach-regency",
-        "name": "Palm Beach Regency"
+        "id": "modern-mountain-retreat",
+        "name": "Modern Mountain Retreat"
       },
       "architect": {
-        "id": "addison-mizner",
-        "name": "Addison Mizner"
+        "id": "clb-architects",
+        "name": "Clb Architects"
       },
       "designer": {
-        "id": "mario-buatta",
-        "name": "Mario Buatta"
+        "id": "commune-design",
+        "name": "Commune Design"
       },
       "colorWheel": "medium",
-      "aspectRatio": "4:3",
-      "imageQuality": "2K",
+      "aspectRatio": "16:9",
+      "imageQuality": "4K",
       "images": [
         {
-          "id": "3c2cb3a2-47f0-4136-b562-d1d00c027a31",
+          "id": "ae0efe0d-8ce9-4f12-8e1f-bca5c1e28d23",
           "roomType": {
-            "id": "kitchen",
-            "name": "Kitchen"
+            "id": "bedroom",
+            "name": "Bedroom"
           },
-          "url": "/api/images/sessions/1f8119bd-6603-4547-9272-52b518646afb/kitchen-3c2cb3a2.jpg",
+          "url": "/api/images/sessions/42365c93-d078-4eb5-abf8-641d40790252/bedroom-ae0efe0d.jpg",
           "selected": false
         }
       ]

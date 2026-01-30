@@ -25,8 +25,11 @@ async def serve_image(session_id: str, filename: str):
     }
     media_type = media_types.get(ext, "image/jpeg")
 
+    # CORS is handled by the global CORSMiddleware in main.py.
+    headers = {"Cache-Control": "public, max-age=31536000"}
+
     return FileResponse(
         path=file_path,
         media_type=media_type,
-        headers={"Cache-Control": "public, max-age=31536000"},
+        headers=headers,
     )

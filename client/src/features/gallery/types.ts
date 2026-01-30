@@ -66,6 +66,8 @@ export interface LightboxState {
 export interface DownloadModalState {
     isOpen: boolean
     zipFileName: string
+    isDownloading: boolean
+    error: string | null
 }
 
 // =============================================================================

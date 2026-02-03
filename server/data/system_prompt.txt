@@ -12,7 +12,7 @@ Role & Design Authority:
 
 Reference Discipline:
 
-• Use my provided Room Design-style Tables as the single source of truth for creating the room scenes
+• Use my provided Room Design-style as the single source of truth for creating the room scenes
 
 • Use my Color Pallet for coloring the room
 
